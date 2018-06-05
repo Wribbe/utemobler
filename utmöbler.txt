@@ -1,0 +1,49 @@
+Tillvägagångssätt:
+
+  https://www.hemtrevligt.se/husohem/artiklar/fixa/20110622/gor-basta-dynan-till-banken/
+
+Inspiration:
+
+  https://www.blocket.se/lund/Tradgardsbord_i_rotting_79626613.htm?ca=23_10&w=0
+  https://www.ikea.com/se/sv/catalog/products/80351819/
+
+Material:
+
+  https://www.skapamer.se/index.php?main_page=advanced_search_result&keyword=stoppning
+  https://jysk.se/sovrum/madrasser/barnmadrasser/skummadrass-60x120-basic-f5
+  https://www.stoffochstil.se/gratismoenster/kuddar/futon-dyna
+
+  Stålstomme:
+    https://www.bauhaus.se/verktyg-arbetsklader/jarnvaror/profiler-platar.html
+
+  Stomme:
+    Limträ 42x180x6000cm 94.75kr/m
+    Fyrkantigt stålrör 25x25x1.55mm 2m -> 159kr / 79.5kr/m
+      https://www.bauhaus.se/verktyg-arbetsklader/jarnvaror/profiler-platar.html?typ1_vac=2524&p=2
+  Dynor:
+    Stoppning: 125kr/60x60x10cm kudde.
+    Dralon 160cm bredd 139kr/m + gratis mönster, 0.96m^2 för en 60x60x10cm kudde.
+  Rotting:
+    https://www.skapamer.se/rotting-3-mm-naturlig-140500nr-8 229kr/140m 3mm (?!)
+
+  Verktyg:
+    https://www.jula.se/catalog/verktyg-och-maskiner/svets-och-lod/svets/transformatorsvetsar/svetstransformator-210046/#tab02
+
+Beräkning:
+
+  Jysk-madrass: 60x120x5cm (23kg/m^3) -- 125kr/st (utan tyg) (~2x kuddar / 1 kudde @ 10cm hög).
+  Dyna IKEA 62x62x11cm -- 300kr/st.
+
+Mått:
+  3.0m x 2.5m x 0.7m (djup) ?
+
+      | ------ 3.0 --------|
+   _   ____________________  _
+   |  |                    |  ' 0.7
+   |  |     _______________| _'
+2.5|  |    |
+   |  |    |
+   |  |    |
+   |  |    |
+   _  |____|
+
