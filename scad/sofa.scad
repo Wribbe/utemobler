@@ -104,7 +104,7 @@ for (i=[0:3]) {
   }
 }
 // Pillows other side.
-for (i=[0:4]) {
+for (i=[0:3]) {
   translate([0, dim_pillow*1.003*(i+1), 0]) {
     pillow();
   }
@@ -119,13 +119,13 @@ pipe(dim_pillow*4);
 
 translate([dim_pipe,dim_pillow,-dim_pipe])
 rotate(90)
-pipe(dim_pillow*5);
+pipe(dim_pillow*4);
 
 translate([dim_pillow,dim_pillow,-dim_pipe])
 rotate(90)
-pipe(dim_pillow*5);
+pipe(dim_pillow*4);
 
-translate([dim_pipe,dim_pillow*6-dim_pipe,-dim_pipe])
+translate([dim_pipe,dim_pillow*5-dim_pipe,-dim_pipe])
 pipe(dim_pillow-2*dim_pipe);
 
 translate([dim_pipe,dim_pipe,-dim_pipe])
@@ -141,11 +141,7 @@ for(i=[1:4]) {
   translate([(i*dim_pillow)-dim_pipe,dim_pillow-dim_pipe,0])
   leg();
 }
-for(i=[1:6]) {
-  translate([0, (i*dim_pillow)-dim_pipe,0])
-  leg();
-}
-for(i=[2:6]) {
+for(i=[2:5]) {
   translate([dim_pillow-dim_pipe, (i*dim_pillow)-dim_pipe], 0)
   leg();
 }
