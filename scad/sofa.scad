@@ -42,13 +42,40 @@ module back_pillow()
   cube([dim_pillow ,dim_back_pillow,dim_back_pillow_height]);
 }
 
+module back_pillow_corner()
+{
+  color(color_back_pillows)
+  cube([dim_pillow-dim_back_pillow_height,dim_back_pillow,dim_back_pillow_height]);
+}
+
+module frame_back()
+{
+
+  color(color_rest)
+  translate([0,-back_straight_offset,-dim_pipe])
+  {
+    // Second main bar to correct length.
+    translate([0,0,back_straight_height])
+    pipe(dim_pillow);
+
+    // Crossbars / back-legs.
+    translate([dim_pipe,0, -dim_legs])
+    rotate([0,-90,0])
+    pipe(back_straight_height+dim_legs);
+
+    translate([dim_pillow,0, -dim_legs])
+    rotate([0,-90,0])
+    pipe(back_straight_height+dim_legs);
+  }
+}
+
 module frame()
 {
 
   color(color_rest)
   rotate([angle_rest,0,0])
   {
-    // Two main bars to correct length.
+    // First main bar to correct length.
     translate([0,0,back_height])
     pipe(dim_pillow);
 
@@ -63,6 +90,8 @@ module frame()
 
   dim_bottom_bar=back_straight_offset+dim_pillow;
 
+  frame_back();
+
   color(color_rest)
   translate([0,-back_straight_offset,-dim_pipe])
   {
@@ -70,7 +99,7 @@ module frame()
     translate([0,0,back_straight_height])
     pipe(dim_pillow);
 
-    // crossbars.
+    // Crossbars / back-legs.
     translate([dim_pipe,0, -dim_legs])
     rotate([0,-90,0])
     pipe(back_straight_height+dim_legs);
@@ -78,7 +107,12 @@ module frame()
     translate([dim_pillow,0, -dim_legs])
     rotate([0,-90,0])
     pipe(back_straight_height+dim_legs);
+  }
 
+
+  color(color_rest)
+  translate([0,-back_straight_offset,-dim_pipe])
+  {
     // Create bottom side pipes.
     translate([dim_pipe, dim_pipe, 0])
     rotate([0,0,90])
@@ -116,4 +150,30 @@ module section()
   back_pillow();
   frame();
 }
-section();
+
+module corner()
+{
+  translate([0,dim_pipe, 0])
+  pillow();
+  translate([0,dim_back_pillow_height+1,dim_pillow_height])
+  rotate([90+angle_rest, 0, 0])
+  back_pillow();
+  translate([-1.5, dim_back_pillow_height+1.5,dim_pillow_height-1])
+  rotate([90-angle_rest, 0, 90])
+  back_pillow_corner();
+  frame();
+}
+
+sections_window=3;
+sections_other=4;
+
+for (i=[0:sections_window-1]) {
+  translate([dim_pillow*(i+1), 0, 0])
+  section();
+}
+corner();
+for (i=[0:sections_other-1]) {
+  translate([-dim_pipe, dim_pillow*(i+2)+dim_pipe, 0])
+  rotate([0,0,-90])
+  section();
+}
