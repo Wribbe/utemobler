@@ -152,3 +152,6 @@ for(i=[2:6]) {
 
 // Backrests.
 backrest(4);
+translate([0,5*dim_pillow,0])
+rotate([0,0,-90])
+backrest(5);
