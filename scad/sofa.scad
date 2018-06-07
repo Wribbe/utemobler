@@ -5,6 +5,9 @@ dim_pillow_height = 10;
 dim_pipe = 2.5;
 dim_legs = 24-dim_pipe;
 
+color_back_pillows="Magenta";
+color_pillows="CadetBlue";
+
 // Backrest-parameters.
 angle_rest=90/10;
 back_height=40;
@@ -25,7 +28,7 @@ module pipe(length)
 
 module pillow()
 {
-  color([0,0,1])
+  color(color_pillows)
   cube([dim_pillow,dim_pillow,dim_pillow_height]);
 }
 
