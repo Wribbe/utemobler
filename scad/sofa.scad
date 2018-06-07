@@ -173,10 +173,11 @@ module corner()
   back_pillow_corner();
   frame();
   translate([-dim_pipe,dim_pillow, 0])
+  color(color_frame)
   rotate([0,0,-90]) {
-    translate([0,0,-dim_pipe])
-    color(color_frame)
+    translate([-dim_pipe,0,-dim_pipe])
     pipe(dim_pillow);
+    translate([-dim_pipe,0,0])
     frame_back();
   }
 }
