@@ -29,14 +29,6 @@ module pillow()
   cube([dim_pillow,dim_pillow,dim_pillow_height]);
 }
 
-module leg()
-{
-  color([1,0,0])
-  translate([0,0,-dim_pipe])
-  rotate([0,90,0])
-  pipe(dim_legs);
-}
-
 module frame()
 {
 
