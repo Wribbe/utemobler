@@ -2,6 +2,10 @@
 
 dim_pillow = 60;
 dim_pillow_height = 10;
+
+dim_back_pillow = 30;
+dim_back_pillow_height = 5;
+
 dim_pipe = 2.5;
 dim_legs = 24-dim_pipe;
 
@@ -30,6 +34,12 @@ module pillow()
 {
   color(color_pillows)
   cube([dim_pillow,dim_pillow,dim_pillow_height]);
+}
+
+module back_pillow()
+{
+  color(color_back_pillows)
+  cube([dim_pillow ,dim_back_pillow,dim_back_pillow_height]);
 }
 
 module frame()
@@ -101,6 +111,9 @@ module section()
 {
   translate([0,dim_pipe, 0])
   pillow();
+  translate([0,dim_back_pillow_height+1,dim_pillow_height])
+  rotate([90+angle_rest, 0, 0])
+  back_pillow();
   frame();
 }
 section();
