@@ -175,10 +175,20 @@ module corner()
   translate([-dim_pipe,dim_pillow, 0])
   color(color_frame)
   rotate([0,0,-90]) {
+    translate([-dim_pipe,-back_straight_offset,-dim_pipe])
+    pipe(dim_pillow);
+    translate([-dim_pipe,-back_straight_offset,-dim_pipe])
+    pipe(dim_pillow);
     translate([-dim_pipe,0,-dim_pipe])
     pipe(dim_pillow);
     translate([-dim_pipe,0,0])
     frame_back();
+  }
+  color(color_frame) {
+    translate([-back_straight_offset,dim_pipe,-dim_pipe])
+    pipe(back_straight_offset-dim_pipe);
+    translate([-back_straight_offset,dim_pillow,-dim_pipe])
+    pipe(back_straight_offset-dim_pipe);
   }
 }
 
