@@ -11,13 +11,13 @@ dim_legs = 24-dim_pipe;
 
 color_back_pillows="Magenta";
 color_pillows="CadetBlue";
+color_frame="Silver";
 
 // Backrest-parameters.
 angle_rest=90/10;
 back_height=40;
 back_straight_height=cos(angle_rest)*back_height+dim_pipe;
 back_straight_offset=sin(angle_rest)*back_height+dim_pipe;
-color_rest=[0.5,0.5,0];
 
 module pipe(length)
 {
@@ -51,7 +51,23 @@ module back_pillow_corner()
 module frame_back()
 {
 
-  color(color_rest)
+  color(color_frame)
+  rotate([angle_rest,0,0])
+  {
+    // First main bar to correct length.
+    translate([0,0,back_height])
+    pipe(dim_pillow);
+
+    // crossbars.
+    translate([dim_pipe,0, 0])
+    rotate([0,-90,0])
+    pipe(back_height);
+    translate([dim_pillow,0, 0])
+    rotate([0,-90,0])
+    pipe(back_height);
+  }
+
+  color(color_frame)
   translate([0,-back_straight_offset,-dim_pipe])
   {
     // Second main bar to correct length.
@@ -72,27 +88,11 @@ module frame_back()
 module frame()
 {
 
-  color(color_rest)
-  rotate([angle_rest,0,0])
-  {
-    // First main bar to correct length.
-    translate([0,0,back_height])
-    pipe(dim_pillow);
-
-    // crossbars.
-    translate([dim_pipe,0, 0])
-    rotate([0,-90,0])
-    pipe(back_height);
-    translate([dim_pillow,0, 0])
-    rotate([0,-90,0])
-    pipe(back_height);
-  }
-
   dim_bottom_bar=back_straight_offset+dim_pillow;
 
   frame_back();
 
-  color(color_rest)
+  color(color_frame)
   translate([0,-back_straight_offset,-dim_pipe])
   {
     // Second main bar to correct length.
@@ -110,7 +110,7 @@ module frame()
   }
 
 
-  color(color_rest)
+  color(color_frame)
   translate([0,-back_straight_offset,-dim_pipe])
   {
     // Create bottom side pipes.
@@ -162,6 +162,13 @@ module corner()
   rotate([90-angle_rest, 0, 90])
   back_pillow_corner();
   frame();
+  translate([-dim_pipe,dim_pillow, 0])
+  rotate([0,0,-90]) {
+    translate([0,0,-dim_pipe])
+    color(color_frame)
+    pipe(dim_pillow);
+    frame_back();
+  }
 }
 
 sections_window=3;
