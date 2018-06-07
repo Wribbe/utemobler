@@ -19,6 +19,11 @@ back_height=40;
 back_straight_height=cos(angle_rest)*back_height+dim_pipe;
 back_straight_offset=sin(angle_rest)*back_height+dim_pipe;
 
+function pillow_area(w, d, h) =
+  2 * w*d +
+  2 * d*h +
+  2 * w*h;
+
 module pipe(length)
 {
   difference(){
@@ -28,24 +33,29 @@ module pipe(length)
     translate([0, thi/2, thi/2])
     cube([length*1.3,dim_pipe-thi,dim_pipe-thi]);
   }
+  echo(str("pipe -- ", length, "cm "));
 }
 
 module pillow()
 {
   color(color_pillows)
   cube([dim_pillow,dim_pillow,dim_pillow_height]);
+  echo(str("pillow -- ", pillow_area(dim_pillow, dim_pillow, dim_pillow_height), "cm^2"));
 }
 
 module back_pillow()
 {
   color(color_back_pillows)
-  cube([dim_pillow ,dim_back_pillow,dim_back_pillow_height]);
+  cube([dim_pillow,dim_back_pillow,dim_back_pillow_height]);
+  echo(str("pillow_back -- ", pillow_area(dim_pillow, dim_back_pillow, dim_back_pillow_height), "cm^2"));
 }
 
 module back_pillow_corner()
 {
+  dim_back_pillow_corner=dim_pillow-dim_back_pillow_height;
   color(color_back_pillows)
-  cube([dim_pillow-dim_back_pillow_height,dim_back_pillow,dim_back_pillow_height]);
+  cube([dim_back_pillow_corner,dim_back_pillow,dim_back_pillow_height]);
+  echo(str("pillow_back_corner -- ", pillow_area(dim_pillow, dim_back_pillow_corner, dim_back_pillow_height), "cm^2"));
 }
 
 module frame_back()
