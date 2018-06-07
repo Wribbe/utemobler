@@ -37,7 +37,7 @@ module leg()
   pipe(dim_legs);
 }
 
-module backrest(num_pillows)
+module frame()
 {
 
   color(color_rest)
@@ -45,109 +45,67 @@ module backrest(num_pillows)
   {
     // Two main bars to correct length.
     translate([0,0,back_height])
-    pipe(dim_pillow*num_pillows);
+    pipe(dim_pillow);
 
     // crossbars.
     translate([dim_pipe,0, 0])
     rotate([0,-90,0])
     pipe(back_height);
-    for (i=[1:num_pillows-1]) {
-      translate([(dim_pipe/2)+i*dim_pillow, 0])
-      rotate([0,-90,0])
-      pipe(back_height);
-    }
-    translate([num_pillows*dim_pillow,0, 0])
+    translate([dim_pillow,0, 0])
     rotate([0,-90,0])
     pipe(back_height);
   }
 
+  dim_bottom_bar=back_straight_offset+dim_pillow;
+
   color(color_rest)
   translate([0,-back_straight_offset,-dim_pipe])
   {
-    // Two main bars to correct length.
+    // Second main bar to correct length.
     translate([0,0,back_straight_height])
-    pipe(dim_pillow*num_pillows);
+    pipe(dim_pillow);
 
     // crossbars.
     translate([dim_pipe,0, -dim_legs])
     rotate([0,-90,0])
     pipe(back_straight_height+dim_legs);
 
-    translate([dim_pipe, dim_pipe, 0])
-    rotate([0,0,90])
-    pipe(back_straight_offset-dim_pipe);
-
-    for (i=[1:num_pillows-1]) {
-
-      translate([(dim_pipe/2)+i*dim_pillow, 0, -dim_legs])
-      rotate([0,-90,0])
-      pipe(back_straight_height+dim_legs);
-
-      translate([(dim_pipe/2)+i*dim_pillow, dim_pipe, 0])
-      rotate([0,0,90])
-      pipe(back_straight_offset-dim_pipe);
-    }
-    translate([num_pillows*dim_pillow,0, -dim_legs])
+    translate([dim_pillow,0, -dim_legs])
     rotate([0,-90,0])
     pipe(back_straight_height+dim_legs);
 
-    translate([num_pillows*dim_pillow, dim_pipe, 0])
+    // Create bottom side pipes.
+    translate([dim_pipe, dim_pipe, 0])
     rotate([0,0,90])
-    pipe(back_straight_offset-dim_pipe);
+    pipe(dim_bottom_bar);
+
+    translate([dim_pillow, dim_pipe, 0])
+    rotate([0,0,90])
+    pipe(dim_bottom_bar);
+
+    // Create bottom front and back pipe.
+    dim_bottom_cross_pipe = dim_pillow-2*dim_pipe;
+    translate([dim_pipe, 0, 0])
+    pipe(dim_bottom_cross_pipe);
+
+    translate([dim_pipe, dim_pillow+back_straight_offset, 0])
+    pipe(dim_bottom_cross_pipe);
+
+    // Create front legs.
+    translate([0, dim_pillow+back_straight_offset, 0])
+    rotate([0,90,0])
+    pipe(dim_legs);
+
+    translate([dim_pillow-dim_pipe, dim_pillow+back_straight_offset, 0])
+    rotate([0,90,0])
+    pipe(dim_legs);
   }
 }
 
-// Pillows window side.
-for (i=[0:3]) {
-  translate([dim_pillow*1.003*i, 0, 0]) {
-    pillow();
-  }
+module section()
+{
+  translate([0,dim_pipe, 0])
+  pillow();
+  frame();
 }
-// Pillows other side.
-for (i=[0:3]) {
-  translate([0, dim_pillow*1.003*(i+1), 0]) {
-    pillow();
-  }
-}
-
-// Pipe frame.
-translate([0,0,-dim_pipe])
-pipe(dim_pillow*4);
-
-translate([0,dim_pillow-dim_pipe,-dim_pipe])
-pipe(dim_pillow*4);
-
-translate([dim_pipe,dim_pillow,-dim_pipe])
-rotate(90)
-pipe(dim_pillow*4);
-
-translate([dim_pillow,dim_pillow,-dim_pipe])
-rotate(90)
-pipe(dim_pillow*4);
-
-translate([dim_pipe,dim_pillow*5-dim_pipe,-dim_pipe])
-pipe(dim_pillow-2*dim_pipe);
-
-translate([dim_pipe,dim_pipe,-dim_pipe])
-rotate(90)
-pipe(dim_pillow-2*dim_pipe);
-
-translate([dim_pillow*4,dim_pipe,-dim_pipe])
-rotate(90)
-pipe(dim_pillow-2*dim_pipe);
-
-// Legs.
-for(i=[1:4]) {
-  translate([(i*dim_pillow)-dim_pipe,dim_pillow-dim_pipe,0])
-  leg();
-}
-for(i=[2:5]) {
-  translate([dim_pillow-dim_pipe, (i*dim_pillow)-dim_pipe], 0)
-  leg();
-}
-
-// Backrests.
-backrest(4);
-translate([0,5*dim_pillow,0])
-rotate([0,0,-90])
-backrest(5);
+section();
