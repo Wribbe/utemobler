@@ -189,7 +189,12 @@ module corner()
     pipe(back_straight_offset-dim_pipe);
     translate([-back_straight_offset,dim_pillow,-dim_pipe])
     pipe(back_straight_offset-dim_pipe);
+    translate([-back_straight_offset-dim_pipe,-back_straight_offset,-dim_pipe])
+    pipe(back_straight_offset+dim_pipe);
   }
+  translate([-back_straight_offset-dim_pipe,-back_straight_offset,-dim_pipe])
+  rotate([])
+  pipe(back_straight_offset+dim_pipe);
 }
 
 sections_window=3;
