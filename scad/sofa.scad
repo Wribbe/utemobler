@@ -6,11 +6,9 @@ dim_pillow_height = 10;
 dim_back_pillow = 30;
 dim_back_pillow_height = 5;
 
-dim_armrest_height = 45;
-dim_armrest_width = 15;
-
+dim_floor_to_pillow_top = 43;
 dim_pipe = 2.5;
-dim_legs = 24-dim_pipe;
+dim_legs = dim_floor_to_pillow_top-dim_pillow_height-dim_pipe;
 
 color_back_pillows="Magenta";
 color_pillows="CadetBlue";
@@ -22,6 +20,11 @@ angle_rest=90/10;
 back_height=40;
 back_straight_height=cos(angle_rest)*back_height+dim_pipe;
 back_straight_offset=sin(angle_rest)*back_height+dim_pipe;
+
+// Armrest parameters.
+dim_diff_armrest_top_of_pillow = 10;
+dim_armrest_height = dim_floor_to_pillow_top+dim_diff_armrest_top_of_pillow;
+dim_armrest_width = 15;
 
 function pillow_area(w, d, h) =
   2 * w*d +
