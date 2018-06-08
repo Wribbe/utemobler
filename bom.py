@@ -23,7 +23,8 @@ for line in [line.strip()[7:-1] for line in open(file).readlines()]:
     materials[name] += digits(value)
 
 frame_metal = 79.5;
-frame_wood = 88.17 / int(180/42);
+#frame_wood = 88.17 / int(180/42);
+frame_wood = 8.95;
 
 prices = {
     'frame': frame_wood,

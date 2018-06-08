@@ -14,6 +14,7 @@ color_back_pillows="Magenta";
 color_pillows="CadetBlue";
 color_frame="Silver";
 color_armrest="Salmon";
+color_surroundings="DarkSlateGray";
 
 // Backrest-parameters.
 angle_rest=90/10;
@@ -277,10 +278,78 @@ module amanda()
   cube([40, 25, 156]);
 }
 
+module surroundings()
+{
+  dim_window_width = 52.5;
+  dim_window_height = 115;
+  dim_window_sep = 9.5;
+  dim_window_buf_right = 8;
+  dim_window_buf_left = 19;
+
+  dim_wall_right=132;
+  dim_wall_lower=138.8;
+  dim_wall_lower_height=90;
+
+  dim_wall_height=241;
+  dim_door=93;
+  dim_door_height=202;
+
+  dim_plank=325;
+
+  color(color_surroundings) {
+
+    // Plank.
+    rotate([0,0,90])
+    cube([dim_plank,9.2,180]);
+
+    // Höger vägg.
+    translate([0,-9.2,0])
+    cube([dim_wall_right,9.2,dim_wall_height]);
+
+    // Under fönster.
+    translate([dim_wall_right,-9.2,0])
+    cube([dim_wall_lower,9.2,dim_wall_lower_height]);
+
+    // Fönsterkarm.
+    translate([dim_wall_right,0,dim_wall_lower_height])
+    rotate([0,90,0])
+    cube([9.5,3,dim_wall_lower]);
+
+    translate([dim_door+dim_wall_right+dim_wall_lower,0,0]) {
+      // Dörr.
+      rotate([0,0,150])
+      cube([dim_door,3,dim_door_height]);
+      translate([0,-3,0]) {
+        // Dörr-padd.
+        cube([5,3,dim_wall_height]);
+        // Dörr-vägg.
+        translate([5+102.2,3,0])
+        rotate([0,0,90])
+        cube([106,102.2,dim_wall_height]);
+      }
+    }
+    // Staket.
+    translate([0,dim_plank,0])
+    cube([117.8,9.2,93.2]);
+
+    // Roof.
+    translate([0,0,dim_wall_height])
+    cube([dim_wall_right+dim_wall_lower+dim_door+5,243,40]);
+
+    //Above window.
+    translate([dim_wall_right,-10,dim_door_height])
+    cube([dim_door+dim_wall_lower,10,dim_wall_height-dim_door_height]);
+
+    //Pillar.
+    translate([343,230,0])
+    cylinder(h=dim_wall_height,r=10/2);
+  }
+}
+
 sections_window=3;
 sections_other=3;
 
-translate([back_straight_offset,back_straight_offset,dim_legs+dim_frame_part]) {
+translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim_frame_part]) {
   for (i=[0:sections_window-1]) {
     translate([dim_pillow*(i+1), 0, 0])
     section();
@@ -294,7 +363,7 @@ translate([back_straight_offset,back_straight_offset,dim_legs+dim_frame_part]) {
 }
 
 rotate([0,0,90])
-translate([0, -((sections_window+1)*dim_pillow+back_straight_offset+dim_frame_part),0])
+translate([0, -((sections_window+1)*dim_pillow+back_straight_offset+dim_frame_part*2),0])
 armrest();
 translate([0, (sections_other+1)*dim_pillow+back_straight_offset+dim_armrest_width+dim_frame_part,0])
 armrest();
@@ -304,3 +373,5 @@ translate([280,100,0])
 stefan();
 translate([100,200,0])
 amanda();
+
+surroundings();
