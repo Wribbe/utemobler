@@ -23,7 +23,7 @@ for line in [line.strip()[7:-1] for line in open(file).readlines()]:
     materials[name] += digits(value)
 
 prices = {
-    'pipe': 79.5, # metern.
+    'frame': 79.5, # metern.
     'stoppning_kudde': 125, # kr/st.
     'stoppning_kudde_bak': 125.0/4.0, #kr/st.
     'tyg_kuddar': 139, #kr/m. (160cm bred)
@@ -32,15 +32,15 @@ prices = {
 grand_total = 0
 
 # Pipe.
-total_pipe = materials['pipe']
-total_meter_pipe = total_pipe/100
-cost_pipe = total_meter_pipe*prices['pipe']
-grand_total += cost_pipe
+total_frame = materials['frame']
+total_meter_frame = total_frame/100
+cost_frame = total_meter_frame*prices['frame']
+grand_total += cost_frame
 
 
-print("Total pipe {}cm -> {}m á {}/m --> Cost: \
-{}kr -- {}kr".format(total_pipe, total_meter_pipe, prices['pipe'], cost_pipe,
-             round(cost_pipe, 1)))
+print("Total frame {}cm -> {}m á {}/m --> Cost: \
+{}kr -- {}kr".format(total_frame, total_meter_frame, prices['frame'], cost_frame,
+             round(cost_frame, 1)))
 
 # Cloth.
 total_cloth = 0
