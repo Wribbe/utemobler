@@ -225,6 +225,16 @@ module corner()
   }
 }
 
+module stefan()
+{
+  cube([60, 25, 180]);
+}
+
+module amanda()
+{
+  cube([40, 25, 156]);
+}
+
 sections_window=3;
 sections_other=4;
 
@@ -240,3 +250,8 @@ translate([back_straight_offset,back_straight_offset,dim_legs+dim_pipe]) {
     section();
   }
 }
+
+translate([280,0,0])
+stefan();
+translate([0,350,0])
+amanda();
