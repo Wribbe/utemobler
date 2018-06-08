@@ -278,7 +278,7 @@ module amanda()
 }
 
 sections_window=3;
-sections_other=4;
+sections_other=3;
 
 translate([back_straight_offset,back_straight_offset,dim_legs+dim_frame_part]) {
   for (i=[0:sections_window-1]) {
@@ -300,7 +300,7 @@ translate([0, (sections_other+1)*dim_pillow+back_straight_offset+dim_armrest_wid
 armrest();
 
 
-translate([280,0,0])
+translate([280,100,0])
 stefan();
-translate([0,350,0])
+translate([100,200,0])
 amanda();
