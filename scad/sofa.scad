@@ -228,13 +228,15 @@ module corner()
 sections_window=3;
 sections_other=4;
 
-for (i=[0:sections_window-1]) {
-  translate([dim_pillow*(i+1), 0, 0])
-  section();
-}
-corner();
-for (i=[0:sections_other-1]) {
-  translate([-dim_pipe, dim_pillow*(i+2)+dim_pipe, 0])
-  rotate([0,0,-90])
-  section();
+translate([back_straight_offset,back_straight_offset,dim_legs+dim_pipe]) {
+  for (i=[0:sections_window-1]) {
+    translate([dim_pillow*(i+1), 0, 0])
+    section();
+  }
+  corner();
+  for (i=[0:sections_other-1]) {
+    translate([-dim_pipe, dim_pillow*(i+2)+dim_pipe, 0])
+    rotate([0,0,-90])
+    section();
+  }
 }
