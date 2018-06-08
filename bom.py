@@ -22,8 +22,11 @@ for line in [line.strip()[7:-1] for line in open(file).readlines()]:
         materials[name] = 0
     materials[name] += digits(value)
 
+frame_metal = 79.5;
+frame_wood = 88.17 / int(180/42);
+
 prices = {
-    'frame': 79.5, # metern.
+    'frame': frame_wood,
     'stoppning_kudde': 125, # kr/st.
     'stoppning_kudde_bak': 125.0/4.0, #kr/st.
     'tyg_kuddar': 139, #kr/m. (160cm bred)

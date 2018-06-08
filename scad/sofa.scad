@@ -33,13 +33,13 @@ function pillow_area(w, d, h) =
 
 module frame_part(length)
 {
-  difference(){
-    thi=0.155;
+//  difference(){
+//    thi=0.155;
     color([0,1,0])
     cube([length,dim_frame_part,dim_frame_part]);
-    translate([0, thi/2, thi/2])
-    cube([length*1.3,dim_frame_part-thi,dim_frame_part-thi]);
-  }
+//    translate([0, thi/2, thi/2])
+//    cube([length*1.3,dim_frame_part-thi,dim_frame_part-thi]);
+//  }
   echo(str("frame -- ", length, "cm "));
 }
 
