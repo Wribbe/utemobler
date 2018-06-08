@@ -33,7 +33,7 @@ grand_total = 0
 
 # Pipe.
 total_pipe = materials['pipe']
-total_meter_pipe = total_pipe/1e3
+total_meter_pipe = total_pipe/100
 cost_pipe = total_meter_pipe*prices['pipe']
 grand_total += cost_pipe
 
