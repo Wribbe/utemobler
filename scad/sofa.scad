@@ -343,6 +343,9 @@ module surroundings()
     //Pillar.
     translate([343,230,0])
     cylinder(h=dim_wall_height,r=10/2);
+
+    translate([5+5,230,0])
+    cylinder(h=dim_wall_height,r=10/2);
   }
 }
 
