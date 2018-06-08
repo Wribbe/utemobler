@@ -6,12 +6,16 @@ dim_pillow_height = 10;
 dim_back_pillow = 30;
 dim_back_pillow_height = 5;
 
+dim_armrest_height = 45;
+dim_armrest_width = 15;
+
 dim_pipe = 2.5;
 dim_legs = 24-dim_pipe;
 
 color_back_pillows="Magenta";
 color_pillows="CadetBlue";
 color_frame="Silver";
+color_armrest="Salmon";
 
 // Backrest-parameters.
 angle_rest=90/10;
@@ -225,6 +229,41 @@ module corner()
   }
 }
 
+module armrest()
+{
+  module base_frame()
+  {
+    pipe(dim_pillow+back_straight_offset+dim_pipe);
+    translate([0, -dim_armrest_width,0])
+    pipe(dim_pillow+back_straight_offset+dim_pipe);
+    rotate([0,0,90])
+    translate([-dim_armrest_width+dim_pipe,-dim_pipe,0])
+    pipe(dim_armrest_width-dim_pipe);
+    rotate([0,0,90])
+    translate([-dim_armrest_width+dim_pipe,-dim_pipe-dim_pillow-back_straight_offset,0])
+    pipe(dim_armrest_width-dim_pipe);
+  }
+
+  module crossbeams()
+  {
+    rotate([0,-90,0]) {
+      translate([dim_pipe,0,-dim_pipe])
+      pipe(dim_armrest_height-2*dim_pipe);
+      translate([dim_pipe,0,-dim_pipe-dim_pillow-back_straight_offset])
+      pipe(dim_armrest_height-2*dim_pipe);
+    }
+  }
+
+  color(color_armrest) {
+    base_frame();
+    crossbeams();
+    translate([0,-dim_armrest_width,0])
+    crossbeams();
+    translate([0,0,dim_armrest_height-dim_pipe])
+    base_frame();
+  }
+}
+
 module stefan()
 {
   cube([60, 25, 180]);
@@ -250,6 +289,13 @@ translate([back_straight_offset,back_straight_offset,dim_legs+dim_pipe]) {
     section();
   }
 }
+
+rotate([0,0,90])
+translate([0, -((sections_window+1)*dim_pillow+back_straight_offset+dim_pipe),0])
+armrest();
+translate([0, (sections_other+1)*dim_pillow+back_straight_offset+dim_armrest_width+dim_pipe,0])
+armrest();
+
 
 translate([280,0,0])
 stefan();
