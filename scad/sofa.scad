@@ -58,15 +58,17 @@ module back_pillow_corner()
   echo(str("pillow_back_corner -- ", pillow_area(dim_pillow, dim_back_pillow_corner, dim_back_pillow_height), "cm^2"));
 }
 
-module frame_back()
+module frame_back(skip_top_bar)
 {
 
   color(color_frame)
   rotate([angle_rest,0,0])
   {
     // First main bar to correct length.
-    translate([0,0,back_height])
-    pipe(dim_pillow);
+    if(!skip_top_bar) {
+      translate([0,0,back_height])
+      pipe(dim_pillow);
+    }
 
     // crossbars.
     translate([dim_pipe,0, 0])
@@ -81,8 +83,10 @@ module frame_back()
   translate([0,-back_straight_offset,-dim_pipe])
   {
     // Second main bar to correct length.
-    translate([0,0,back_straight_height])
-    pipe(dim_pillow);
+    if(!skip_top_bar) {
+      translate([0,0,back_straight_height])
+      pipe(dim_pillow);
+    }
 
     // Crossbars / back-legs.
     translate([dim_pipe,0, -dim_legs])
@@ -95,19 +99,21 @@ module frame_back()
   }
 }
 
-module frame()
+module frame(skip_top_bar)
 {
 
   dim_bottom_bar=back_straight_offset+dim_pillow;
 
-  frame_back();
+  frame_back(skip_top_bar);
 
   color(color_frame)
   translate([0,-back_straight_offset,-dim_pipe])
   {
     // Second main bar to correct length.
-    translate([0,0,back_straight_height])
-    pipe(dim_pillow);
+    if (!skip_top_bar) {
+      translate([0,0,back_straight_height])
+      pipe(dim_pillow);
+    }
 
     // Crossbars / back-legs.
     translate([dim_pipe,0, -dim_legs])
@@ -171,7 +177,7 @@ module corner()
   translate([-1.5, dim_back_pillow_height+1.5,dim_pillow_height-1])
   rotate([90-angle_rest, 0, 90])
   back_pillow_corner();
-  frame();
+  frame(true);
   translate([-dim_pipe,dim_pillow, 0])
   color(color_frame)
   rotate([0,0,-90]) {
@@ -182,19 +188,41 @@ module corner()
     translate([-dim_pipe,0,-dim_pipe])
     pipe(dim_pillow);
     translate([-dim_pipe,0,0])
-    frame_back();
+    frame_back(true);
   }
   color(color_frame) {
     translate([-back_straight_offset,dim_pipe,-dim_pipe])
     pipe(back_straight_offset-dim_pipe);
+
     translate([-back_straight_offset,dim_pillow,-dim_pipe])
     pipe(back_straight_offset-dim_pipe);
+
     translate([-back_straight_offset-dim_pipe,-back_straight_offset,-dim_pipe])
     pipe(back_straight_offset+dim_pipe);
+
+    translate([-back_straight_offset-dim_pipe,-back_straight_offset,-dim_pipe])
+    pipe(back_straight_offset+dim_pipe);
+
+    translate([-back_straight_offset,-back_straight_offset+dim_pipe,-dim_pipe])
+    rotate([0,0,90])
+    pipe(back_straight_offset);
+
+    rotate([angle_rest, 0,0])
+    translate([-back_straight_offset,0,back_height])
+    pipe(dim_pillow+back_straight_offset);
+
+    translate([-back_straight_offset,-back_straight_offset,back_straight_height-dim_pipe])
+    pipe(dim_pillow+back_straight_offset);
+
+    translate([-back_straight_offset,-back_straight_offset,back_straight_height-dim_pipe])
+    rotate([0,0,90])
+    pipe(dim_pillow+back_straight_offset+dim_pipe);
+
+    addition_corner=0.5;
+    rotate([-angle_rest, 0,90])
+    translate([-back_straight_offset+2*dim_pipe-addition_corner,0,back_height+0.4])
+    pipe(dim_pillow+back_straight_offset-dim_pipe+addition_corner);
   }
-  translate([-back_straight_offset-dim_pipe,-back_straight_offset,-dim_pipe])
-  rotate([])
-  pipe(back_straight_offset+dim_pipe);
 }
 
 sections_window=3;
