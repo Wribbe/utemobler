@@ -27,6 +27,8 @@ dim_diff_armrest_top_of_pillow = 10;
 dim_armrest_height = dim_floor_to_pillow_top+dim_diff_armrest_top_of_pillow;
 dim_armrest_width = 20;
 
+back_crossbar_lower = 1;
+
 function pillow_area(w, d, h) =
   2 * w*d +
   2 * d*h +
@@ -79,7 +81,6 @@ module frame_back(skip_top_bar)
 //    }
 
     // crossbars.
-    back_crossbar_lower = 1;
     translate([dim_frame_part,0,-back_crossbar_lower])
     rotate([0,-90,0])
     frame_part(back_height);
@@ -151,6 +152,14 @@ module mod_frame(skip_top_bar)
     dim_bottom_cross_frame_part = dim_pillow-2*dim_frame_part;
     translate([dim_frame_part, 0, 0])
     frame_part(dim_bottom_cross_frame_part);
+
+    // "Fill in" back-rest.
+    rotate([angle_rest, 0, 0]) {
+      for (a = [dim_frame_part:dim_frame_part*2:back_height] ) {
+        translate([dim_frame_part,back_straight_offset+back_crossbar_lower,a])
+        frame_part(dim_bottom_cross_frame_part);
+      }
+    }
 
     translate([dim_frame_part, dim_pillow+back_straight_offset, 0])
     frame_part(dim_bottom_cross_frame_part);
