@@ -153,6 +153,15 @@ module mod_frame(skip_top_bar)
     translate([dim_frame_part, 0, 0])
     frame_part(dim_bottom_cross_frame_part);
 
+    translate([dim_frame_part, dim_pillow+back_straight_offset, 0])
+    frame_part(dim_bottom_cross_frame_part);
+
+    // "Fill in bottom.
+    for (a = [dim_frame_part*2:dim_frame_part*2:dim_pillow+back_straight_offset] ) {
+      translate([dim_frame_part,a,0])
+      frame_part(dim_bottom_cross_frame_part);
+    }
+
     // "Fill in" back-rest.
     rotate([angle_rest, 0, 0]) {
       for (a = [dim_frame_part:dim_frame_part*2:back_height] ) {
@@ -160,9 +169,6 @@ module mod_frame(skip_top_bar)
         frame_part(dim_bottom_cross_frame_part);
       }
     }
-
-    translate([dim_frame_part, dim_pillow+back_straight_offset, 0])
-    frame_part(dim_bottom_cross_frame_part);
 
     // Create front legs.
     translate([0, dim_pillow+back_straight_offset, 0])
