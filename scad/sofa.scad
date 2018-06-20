@@ -25,7 +25,7 @@ back_straight_offset=sin(angle_rest)*back_height+dim_frame_part;
 // Armrest parameters.
 dim_diff_armrest_top_of_pillow = 10;
 dim_armrest_height = dim_floor_to_pillow_top+dim_diff_armrest_top_of_pillow;
-dim_armrest_width = 15;
+dim_armrest_width = 20;
 
 function pillow_area(w, d, h) =
   2 * w*d +
@@ -238,11 +238,14 @@ module armrest()
   module base_mod_frame()
   {
     frame_part(dim_pillow+back_straight_offset+dim_frame_part);
+
     translate([0, -dim_armrest_width,0])
     frame_part(dim_pillow+back_straight_offset+dim_frame_part);
+
     rotate([0,0,90])
     translate([-dim_armrest_width+dim_frame_part,-dim_frame_part,0])
     frame_part(dim_armrest_width-dim_frame_part);
+
     rotate([0,0,90])
     translate([-dim_armrest_width+dim_frame_part,-dim_frame_part-dim_pillow-back_straight_offset,0])
     frame_part(dim_armrest_width-dim_frame_part);
@@ -250,19 +253,22 @@ module armrest()
 
   module crossbeams()
   {
+    dim_height = dim_armrest_height-dim_legs-dim_frame_part;
     rotate([0,-90,0]) {
-      translate([dim_frame_part,0,-dim_frame_part])
-      frame_part(dim_armrest_height-2*dim_frame_part);
-      translate([dim_frame_part,0,-dim_frame_part-dim_pillow-back_straight_offset])
-      frame_part(dim_armrest_height-2*dim_frame_part);
+      translate([dim_legs-dim_frame_part,0,0]) {
+        translate([dim_frame_part,0,-dim_frame_part])
+        frame_part(dim_height);
+        translate([dim_frame_part,0,-dim_frame_part-dim_pillow-back_straight_offset])
+        frame_part(dim_height);
+      }
     }
   }
 
   color(color_armrest) {
-    base_mod_frame();
+    //base_mod_frame();
     crossbeams();
-    translate([0,-dim_armrest_width,0])
-    crossbeams();
+    //translate([0,-dim_armrest_width,0])
+    //crossbeams();
     translate([0,0,dim_armrest_height-dim_frame_part])
     base_mod_frame();
   }
@@ -368,13 +374,14 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
 rotate([0,0,90])
 translate([0, -((sections_window+1)*dim_pillow+back_straight_offset+dim_frame_part*2),0])
 armrest();
-translate([0, (sections_other+1)*dim_pillow+back_straight_offset+dim_armrest_width+dim_frame_part,0])
+translate([dim_pillow+back_straight_offset+dim_frame_part, (sections_other+1)*dim_pillow+back_straight_offset+dim_frame_part*2,0])
+rotate([0,0,180])
 armrest();
 
 
-translate([280,100,0])
-stefan();
-translate([100,200,0])
-amanda();
+//translate([280,100,0])
+//stefan();
+//translate([100,200,0])
+//amanda();
 
-surroundings();
+//surroundings();
