@@ -20,7 +20,7 @@ color_surroundings="DarkSlateGray";
 angle_rest=90/10;
 back_height=40;
 back_straight_height=cos(angle_rest)*back_height+dim_frame_part;
-back_straight_offset=sin(angle_rest)*back_height+dim_frame_part;
+back_straight_offset=sin(angle_rest)*back_height+dim_frame_part-4.5;
 
 // Armrest parameters.
 dim_diff_armrest_top_of_pillow = 10;
@@ -72,17 +72,18 @@ module frame_back(skip_top_bar)
   color(color_frame)
   rotate([angle_rest,0,0])
   {
-    // First main bar to correct length.
-    if(!skip_top_bar) {
-      translate([0,0,back_height])
-      frame_part(dim_pillow);
-    }
+//    // First main bar to correct length.
+//    if(!skip_top_bar) {
+//      translate([0,0,back_height])
+//      frame_part(dim_pillow);
+//    }
 
     // crossbars.
-    translate([dim_frame_part,0, 0])
+    back_crossbar_lower = 1;
+    translate([dim_frame_part,0,-back_crossbar_lower])
     rotate([0,-90,0])
     frame_part(back_height);
-    translate([dim_pillow,0, 0])
+    translate([dim_pillow,0, -back_crossbar_lower])
     rotate([0,-90,0])
     frame_part(back_height);
   }
@@ -90,7 +91,7 @@ module frame_back(skip_top_bar)
   color(color_frame)
   translate([0,-back_straight_offset,-dim_frame_part])
   {
-    // Second main bar to correct length.
+   // Second main bar to correct length.
     if(!skip_top_bar) {
       translate([0,0,back_straight_height])
       frame_part(dim_pillow);
@@ -169,7 +170,7 @@ module section()
 {
   translate([0,dim_frame_part, 0])
   pillow();
-  translate([0,dim_back_pillow_height+1,dim_pillow_height])
+  translate([0,dim_back_pillow_height+2.9,dim_pillow_height])
   rotate([90+angle_rest, 0, 0])
   back_pillow();
   mod_frame();
