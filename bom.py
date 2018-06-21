@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from collections import Counter
+
 materials = {}
 
 def digits(string):
@@ -15,9 +17,13 @@ def digits(string):
     else:
         return int(''.join(ret))
 
+lengths = Counter()
+
 file="bom.txt"
 for line in [line.strip()[7:-1] for line in open(file).readlines()]:
     name, value = [tok.strip() for tok in line.split('--')]
+    if (name == "frame"):
+        lengths[value] += 1
     if not materials.get(name):
         materials[name] = 0
     materials[name] += digits(value)
@@ -80,3 +86,23 @@ print("Stuffing back pillows {}kr/pillow á {} pillows: {}kr -->\
 grand_total += cost_pillow_back_filling
 
 print("--------\nTotal: {}kr.".format(round(grand_total, 2)))
+
+print("\nLength summery:")
+for v, l in reversed(sorted([(v, l) for l, v in lengths.items()])):
+    print("{:<3}x {}".format(v, l))
+
+max_len = 420/2
+current_len = 0
+num_max = 0
+
+for l, n in lengths.items():
+    l = digits(l)
+    for _ in range(n):
+        print("Current total: {} Trying to add: {}". format(current_len, l))
+        current_len += l
+        if current_len > max_len:
+            print("not using: {}".format(max_len-(current_len-l)))
+            num_max += 1
+            current_len = l
+
+print("Need {} x of {}cm.".format(num_max, max_len))

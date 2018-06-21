@@ -125,15 +125,6 @@ module mod_frame(skip_top_bar)
       translate([0,0,back_straight_height])
       frame_part(dim_pillow);
     }
-
-    // Crossbars / back-legs.
-    translate([dim_frame_part,0, -dim_legs])
-    rotate([0,-90,0])
-    frame_part(back_straight_height+dim_legs);
-
-    translate([dim_pillow,0, -dim_legs])
-    rotate([0,-90,0])
-    frame_part(back_straight_height+dim_legs);
   }
 
 
