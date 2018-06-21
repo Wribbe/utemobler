@@ -24,8 +24,9 @@ for line in [line.strip()[7:-1] for line in open(file).readlines()]:
 
 frame_metal = 79.5;
 #frame_wood = 88.17 / int(180/42);
-#frame_wood = 8.95; # Tryckimpgnernerad.
-frame_wood = 7.95; # Ej Tryckimpegnerad.
+frame_wood = 8.95; # Tryckimpgnernerad.
+#frame_wood = 7.95; # Ej Tryckimpegnerad.
+#frame_wood = 14.10; # Ej Tryckimpegnerad Bejjer.
 
 prices = {
     'frame': frame_wood,

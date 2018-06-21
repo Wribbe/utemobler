@@ -107,6 +107,7 @@ module frame_back(skip_top_bar)
     rotate([0,-90,0])
     frame_part(back_straight_height+dim_legs);
   }
+
 }
 
 module mod_frame(skip_top_bar)
@@ -148,6 +149,21 @@ module mod_frame(skip_top_bar)
     rotate([0,0,90])
     frame_part(dim_bottom_bar);
 
+    // Stablize legs.
+    translate([dim_pillow, dim_frame_part, -dim_legs/2])
+    rotate([0,0,90])
+    frame_part(dim_bottom_bar-dim_frame_part);
+
+    translate([dim_frame_part, 0, -dim_legs/2])
+    frame_part(dim_bottom_cross_frame_part);
+
+    translate([dim_frame_part, dim_pillow+back_straight_offset, -dim_legs/2])
+    frame_part(dim_bottom_cross_frame_part);
+
+    translate([dim_frame_part, dim_frame_part, -dim_legs/2])
+    rotate([0,0,90])
+    frame_part(dim_bottom_bar-dim_frame_part);
+
     // Create bottom front and back frame_part.
     dim_bottom_cross_frame_part = dim_pillow-2*dim_frame_part;
     translate([dim_frame_part, 0, 0])
@@ -183,11 +199,11 @@ module mod_frame(skip_top_bar)
 
 module section()
 {
-  translate([0,dim_frame_part, 0])
-  pillow();
-  translate([0,dim_back_pillow_height+2.9,dim_pillow_height])
-  rotate([90+angle_rest, 0, 0])
-  back_pillow();
+//  translate([0,dim_frame_part, 0])
+//  pillow();
+//  translate([0,dim_back_pillow_height+2.9,dim_pillow_height])
+//  rotate([90+angle_rest, 0, 0])
+//  back_pillow();
   mod_frame();
 }
 
@@ -371,28 +387,29 @@ module surroundings()
   }
 }
 
-sections_window=3;
-sections_other=3;
+sections_window=1;
+//sections_window=3;
+//sections_other=3;
 
 translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim_frame_part]) {
   for (i=[0:sections_window-1]) {
     translate([dim_pillow*(i+1), 0, 0])
     section();
   }
-  corner();
-  for (i=[0:sections_other-1]) {
-    translate([-dim_frame_part, dim_pillow*(i+2)+dim_frame_part, 0])
-    rotate([0,0,-90])
-    section();
-  }
+//  corner();
+//  for (i=[0:sections_other-1]) {
+//    translate([-dim_frame_part, dim_pillow*(i+2)+dim_frame_part, 0])
+//    rotate([0,0,-90])
+//    section();
+//  }
 }
 
-rotate([0,0,90])
-translate([0, -((sections_window+1)*dim_pillow+back_straight_offset+dim_frame_part*2),0])
-armrest();
-translate([dim_pillow+back_straight_offset+dim_frame_part, (sections_other+1)*dim_pillow+back_straight_offset+dim_frame_part*2,0])
-rotate([0,0,180])
-armrest();
+//rotate([0,0,90])
+//translate([0, -((sections_window+1)*dim_pillow+back_straight_offset+dim_frame_part*2),0])
+//armrest();
+//translate([dim_pillow+back_straight_offset+dim_frame_part, (sections_other+1)*dim_pillow+back_straight_offset+dim_frame_part*2,0])
+//rotate([0,0,180])
+//armrest();
 
 
 //translate([280,100,0])
