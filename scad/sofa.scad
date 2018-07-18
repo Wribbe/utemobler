@@ -117,15 +117,15 @@ module mod_frame(skip_top_bar)
 
   frame_back(skip_top_bar);
 
-  color(color_frame)
-  translate([0,-back_straight_offset,-dim_frame_part])
-  {
-    // Second main bar to correct length.
-    if (!skip_top_bar) {
-      translate([0,0,back_straight_height])
-      frame_part(dim_pillow);
-    }
-  }
+//  color(color_frame)
+//  translate([0,-back_straight_offset,-dim_frame_part])
+//  {
+//    // Second main bar to correct length.
+//    if (!skip_top_bar) {
+//      translate([0,0,back_straight_height])
+//      frame_part(dim_pillow);
+//    }
+//  }
 
 
   color(color_frame)
