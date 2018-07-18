@@ -27,6 +27,14 @@ dim_diff_armrest_top_of_pillow = 10;
 dim_armrest_height = dim_floor_to_pillow_top+dim_diff_armrest_top_of_pillow;
 dim_armrest_width = 20;
 
+// Corner dimensions.
+dim_corner_cross_beam = dim_pillow+back_straight_offset-dim_frame_part;
+dim_corner_main_beam = dim_pillow+back_straight_offset;
+dim_corner_back_legs = back_straight_height+dim_legs+dim_frame_part;
+dim_corner_leg_stab_height = dim_legs/2;
+dim_corner_back_height = back_height+1;
+offset_corner_back = back_straight_offset+2;
+
 back_crossbar_lower = 1;
 
 function pillow_area(w, d, h) =
@@ -200,59 +208,118 @@ module section()
 
 module corner()
 {
-  translate([0,dim_frame_part, 0])
-  pillow();
-  translate([0,dim_back_pillow_height+1,dim_pillow_height])
-  rotate([90+angle_rest, 0, 0])
-  back_pillow();
-  translate([-1.5, dim_back_pillow_height+1.5,dim_pillow_height-1])
-  rotate([90-angle_rest, 0, 90])
-  back_pillow_corner();
-  mod_frame(true);
-  translate([-dim_frame_part,dim_pillow, 0])
-  color(color_frame)
-  rotate([0,0,-90]) {
-    translate([-dim_frame_part,-back_straight_offset,-dim_frame_part])
-    frame_part(dim_pillow);
-    translate([-dim_frame_part,-back_straight_offset,-dim_frame_part])
-    frame_part(dim_pillow);
-    translate([-dim_frame_part,0,-dim_frame_part])
-    frame_part(dim_pillow);
-    translate([-dim_frame_part,0,0])
-    frame_back(true);
-  }
-  color(color_frame) {
-    translate([-back_straight_offset,dim_frame_part,-dim_frame_part])
-    frame_part(back_straight_offset-dim_frame_part);
 
-    translate([-back_straight_offset,dim_pillow,-dim_frame_part])
-    frame_part(back_straight_offset-dim_frame_part);
+  // *** Add frame parts adjusted for extra back piece.
+  // -- Top part.
+  translate([-back_straight_offset,-back_straight_offset,back_straight_height-dim_frame_part])
+  frame_part(dim_corner_cross_beam);
 
-    translate([-back_straight_offset-dim_frame_part,-back_straight_offset,-dim_frame_part])
-    frame_part(back_straight_offset+dim_frame_part);
+  translate([-back_straight_offset,-back_straight_offset+dim_frame_part,back_straight_height-dim_frame_part])
+  rotate([0,0,90])
+  frame_part(dim_corner_main_beam-dim_frame_part);
 
-    translate([-back_straight_offset-dim_frame_part,-back_straight_offset,-dim_frame_part])
-    frame_part(back_straight_offset+dim_frame_part);
+  // -- Bottom part.
+  translate([-back_straight_offset,-back_straight_offset+dim_corner_main_beam,-dim_frame_part])
+  frame_part(dim_corner_cross_beam);
+
+  translate([-back_straight_offset,-back_straight_offset,-dim_frame_part])
+  frame_part(dim_corner_cross_beam);
+
+  translate([-back_straight_offset,-back_straight_offset+dim_frame_part,-dim_frame_part])
+  rotate([0,0,90])
+  frame_part(dim_corner_main_beam-dim_frame_part);
+
+  translate([-back_straight_offset+dim_corner_cross_beam+dim_frame_part,-back_straight_offset+dim_frame_part,-dim_frame_part])
+  rotate([0,0,90])
+  frame_part(dim_corner_main_beam);
+
+  // *** Add vertical back-frame/leg pieces.
+  translate([-back_straight_offset,-back_straight_offset,-dim_legs-dim_frame_part])
+  rotate([0,-90,0])
+  frame_part(dim_corner_back_legs);
+
+  translate([-back_straight_offset+dim_corner_cross_beam+dim_frame_part,-back_straight_offset,-dim_legs-dim_frame_part])
+  rotate([0,-90,0])
+  frame_part(dim_corner_back_legs);
+
+  translate([-back_straight_offset,-back_straight_offset+dim_corner_main_beam,-dim_legs-dim_frame_part])
+  rotate([0,-90,0])
+  frame_part(dim_corner_back_legs);
+
+  // *** Add single leg.
+  translate([-back_straight_offset+dim_corner_cross_beam+dim_frame_part,-back_straight_offset+dim_corner_main_beam,-dim_legs-dim_frame_part])
+  rotate([0,-90,0])
+  frame_part(dim_legs);
+
+  // *** Add lower beams between legs.
+  translate([0,0,-dim_corner_leg_stab_height])
+  {
+    translate([-back_straight_offset,-back_straight_offset+dim_corner_main_beam,-dim_frame_part])
+    frame_part(dim_corner_cross_beam);
+
+    translate([-back_straight_offset,-back_straight_offset,-dim_frame_part])
+    frame_part(dim_corner_cross_beam);
 
     translate([-back_straight_offset,-back_straight_offset+dim_frame_part,-dim_frame_part])
     rotate([0,0,90])
-    frame_part(back_straight_offset);
+    frame_part(dim_corner_main_beam-dim_frame_part);
 
-    rotate([angle_rest, 0,0])
-    translate([-back_straight_offset,0,back_height])
-    frame_part(dim_pillow+back_straight_offset);
-
-    translate([-back_straight_offset,-back_straight_offset,back_straight_height-dim_frame_part])
-    frame_part(dim_pillow+back_straight_offset);
-
-    translate([-back_straight_offset,-back_straight_offset,back_straight_height-dim_frame_part])
+    translate([-back_straight_offset+dim_corner_cross_beam+dim_frame_part,-back_straight_offset+dim_frame_part,-dim_frame_part])
     rotate([0,0,90])
-    frame_part(dim_pillow+back_straight_offset+dim_frame_part);
+    frame_part(dim_corner_main_beam);
+  }
 
-    addition_corner=0.5;
-    rotate([-angle_rest, 0,90])
-    translate([-back_straight_offset+2*dim_frame_part-addition_corner,0,back_height+0.4])
-    frame_part(dim_pillow+back_straight_offset-dim_frame_part+addition_corner);
+  // *** Fill in seat.
+  for (a = [-back_straight_offset+dim_frame_part*2:dim_frame_part*2:dim_corner_main_beam-2*dim_frame_part] ) {
+    translate([-back_straight_offset,a,-dim_frame_part])
+    frame_part(dim_corner_cross_beam);
+  }
+
+  // *** Add extra beam in order to fixate backrest.
+  translate([-back_straight_offset,-back_straight_offset+dim_frame_part,-dim_frame_part])
+  frame_part(dim_corner_cross_beam);
+
+  // *** Construct sloped back.
+  translate([back_straight_offset+dim_frame_part,0.3,-0.7])
+  rotate([angle_rest,0,0]) {
+    // --- Right part.
+    translate([-back_straight_offset+(dim_corner_main_beam-back_straight_offset-dim_frame_part),0,0])
+    rotate([0,-90,0])
+    frame_part(dim_corner_back_height);
+
+    // --- Left part.
+    translate([-back_straight_offset,0,0])
+    rotate([0,-90,0])
+    frame_part(dim_corner_back_height);
+
+    // --- Fill in back between.
+    for (a = [dim_frame_part:dim_frame_part*2:back_height-dim_frame_part]) {
+      translate([-back_straight_offset,0,a])
+      frame_part(dim_corner_main_beam-back_straight_offset-2*dim_frame_part);
+    }
+  }
+  // *** Construct second sloped back.
+  translate([-dim_frame_part,dim_corner_main_beam-2*back_straight_offset,-0.7])
+  rotate([angle_rest,0,-90])
+  {
+    // --- Right part.
+    translate([-back_straight_offset+dim_corner_back_cross+dim_frame_part,0,0])
+    rotate([0,-90,0])
+    frame_part(dim_corner_back_height);
+
+
+    // --- Left part.
+    translate([-back_straight_offset,0,0])
+    rotate([0,-90,0])
+    frame_part(dim_corner_back_height);
+
+    dim_corner_back_cross = dim_corner_main_beam-back_straight_offset-1.6*dim_frame_part;
+
+    // --- Fill in back between.
+    for (a = [dim_frame_part:dim_frame_part*2:back_height-dim_frame_part]) {
+      translate([-back_straight_offset,0,a])
+      frame_part(dim_corner_back_cross);
+    }
   }
 }
 
@@ -387,7 +454,7 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
     translate([dim_pillow*(i+1), 0, 0])
     section();
   }
-//  corner();
+  corner();
 //  for (i=[0:sections_other-1]) {
 //    translate([-dim_frame_part, dim_pillow*(i+2)+dim_frame_part, 0])
 //    rotate([0,0,-90])
