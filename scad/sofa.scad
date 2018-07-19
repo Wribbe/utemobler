@@ -50,8 +50,8 @@ dim_corner_back_height = back_height+1;
 offset_corner_back = back_straight_offset+2;
 
 // Table dimensions.
-//dim_table_width = 240;
-dim_table_width = 165;
+dim_table_width = 240;
+//dim_table_width = 165;
 dim_table_depth = 110;
 dim_table_height = 55;
 dim_table_mosaic_depth = 0.6;
@@ -76,8 +76,7 @@ dim_table_bottom_part_depth = dim_table_depth-dim_table_bottom_reduction;
 dim_table_depth_between_legs = dim_table_depth-2*dim_table_leg_depth-2*dim_table_leg_offset;
 dim_table_width_between_legs = dim_table_width-2*dim_table_leg_width-2*dim_table_leg_offset;
 dim_table_lath_offset = dim_table_oak_border_height+dim_table_leg_offset;
-dim_table_lath_last_offset =
-dim_table_width-dim_table_lath_offset-dim_table_leg_offset-dim_table_lath_width-dim_table_oak_border_height;
+dim_table_lath_last_offset = dim_table_width-dim_table_lath_offset-dim_table_leg_offset-dim_table_lath_width-dim_table_oak_border_height;
 dim_table_lath_depth = dim_table_depth_between_legs-dim_table_oak_border_height;
 dim_table_bottom_lath_offset = dim_table_oak_border_height;
 dim_table_bottom_lath_last_offset = dim_table_bottom_part_width-dim_table_lath_width-dim_table_oak_border_height*2;
@@ -561,6 +560,7 @@ module table()
       dim_oak_board_width-dim_table_top_indent/2,
       dim_table_cut_depth
     ])
+//    board(244,122);
     board(
       width-2*dim_oak_board_width+dim_table_top_indent,
       depth-2*dim_oak_board_width+dim_table_top_indent,
