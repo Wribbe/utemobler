@@ -35,6 +35,18 @@ dim_corner_leg_stab_height = dim_legs/2;
 dim_corner_back_height = back_height+1;
 offset_corner_back = back_straight_offset+2;
 
+// Table dimensions.
+dim_table_width = 100;
+dim_table_depth = 150;
+dim_table_height = 55;
+dim_table_mosaic_depth = 0.6;
+dim_cut_furu_width = 10;
+dim_cut_furu_height = 1.8;
+dim_table_top_indent = 1.5;
+dim_board_height = 0.3;
+dim_table_cut_depth = dim_cut_furu_height-dim_board_height-dim_table_mosaic_depth;
+
+
 back_crossbar_lower = 1;
 
 function pillow_area(w, d, h) =
@@ -445,15 +457,73 @@ module surroundings()
   }
 }
 
-sections_window=1;
+module cut_furu(length)
+{
+  cube([dim_cut_furu_width,length,dim_cut_furu_height]);
+}
+
+module board(width, depth, height=dim_board_height)
+{
+  cube([width, depth, height]);
+}
+
+module table()
+{
+  module table_mod_top_frame()
+  {
+    // *** Two planks for depth.
+    cut_furu(dim_table_depth);
+    translate([dim_table_width-dim_cut_furu_width, 0, 0])
+    cut_furu(dim_table_depth);
+
+    // *** Two plans for width.
+    rotate([0,0,-90])
+    {
+      translate([-dim_cut_furu_width,0,0])
+      cut_furu(dim_table_width);
+      translate([-dim_table_depth,0,0])
+      cut_furu(dim_table_width);
+    }
+  }
+
+  module table_mod_bottom_board(height=dim_board_height) {
+    translate([
+      dim_cut_furu_width-dim_table_top_indent/2,
+      dim_cut_furu_width-dim_table_top_indent/2,
+      dim_table_cut_depth
+    ])
+    board(
+      dim_table_width-2*dim_cut_furu_width+dim_table_top_indent,
+      dim_table_depth-2*dim_cut_furu_width+dim_table_top_indent,
+      height
+    );
+  }
+
+  module table_mod_cut_top_frame()
+  {
+    difference()
+    {
+      table_mod_top_frame();
+      table_mod_bottom_board(10);
+    }
+  }
+
+  // *** Construct table.
+  table_mod_cut_top_frame();
+  table_mod_bottom_board();
+
+}
+
+sections_window=2;
 //sections_window=3;
-//sections_other=3;
+sections_other=2;
 
 translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim_frame_part]) {
   for (i=[0:sections_window-1]) {
     translate([dim_pillow*(i+1), 0, 0])
     section();
   }
+  color(color_frame)
   corner();
 //  for (i=[0:sections_other-1]) {
 //    translate([-dim_frame_part, dim_pillow*(i+2)+dim_frame_part, 0])
@@ -474,5 +544,7 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
 //stefan();
 //translate([100,200,0])
 //amanda();
+
+!table();
 
 //surroundings();
