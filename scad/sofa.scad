@@ -36,8 +36,9 @@ dim_corner_back_height = back_height+1;
 offset_corner_back = back_straight_offset+2;
 
 // Table dimensions.
+//dim_table_width = 240;
 dim_table_width = 165;
-dim_table_depth = 100;
+dim_table_depth = 110;
 dim_table_height = 55;
 dim_table_mosaic_depth = 0.6;
 dim_oak_board_width = 9.5;
@@ -53,8 +54,12 @@ dim_table_furu_sides_height = 0.8;
 dim_table_leg_height = dim_table_height-dim_oak_board_height;
 dim_table_leg_width = 4.5;
 dim_table_leg_depth = 4.5;
-dim_table_leg_offset = 2;
+dim_table_leg_offset = 3;
 dim_table_offset = dim_pillow+back_straight_offset+dim_frame_part+15;
+dim_table_bottom_part_height = 14;
+dim_table_bottom_reduction = dim_table_leg_width+2*dim_table_leg_offset;
+dim_table_bottom_part_width = dim_table_width-dim_table_bottom_reduction;
+dim_table_bottom_part_depth= dim_table_depth-dim_table_bottom_reduction;
 
 
 back_crossbar_lower = 1;
@@ -495,42 +500,42 @@ module oak_leg(height)
 module table()
 {
 
-  module table_mod_top_frame()
+  module table_mod_top_frame(width, depth)
   {
     // *** Two planks for depth.
-    oak(dim_table_depth);
-    translate([dim_table_width-dim_oak_board_width, 0, 0])
-    oak(dim_table_depth);
+    oak(depth);
+    translate([width-dim_oak_board_width, 0, 0])
+    oak(depth);
 
     // *** Two plans for width.
     rotate([0,0,-90])
     {
       translate([-dim_oak_board_width,0,0])
-      oak(dim_table_width);
-      translate([-dim_table_depth,0,0])
-      oak(dim_table_width);
+      oak(width);
+      translate([-depth,0,0])
+      oak(width);
     }
   }
 
-  module table_mod_bottom_board(height=dim_board_height) {
+  module table_mod_bottom_board(width, depth, height=dim_board_height) {
     translate([
       dim_oak_board_width-dim_table_top_indent/2,
       dim_oak_board_width-dim_table_top_indent/2,
       dim_table_cut_depth
     ])
     board(
-      dim_table_width-2*dim_oak_board_width+dim_table_top_indent,
-      dim_table_depth-2*dim_oak_board_width+dim_table_top_indent,
+      width-2*dim_oak_board_width+dim_table_top_indent,
+      depth-2*dim_oak_board_width+dim_table_top_indent,
       height
     );
   }
 
-  module table_mod_cut_top_frame()
+  module table_mod_cut_top_frame(width, depth)
   {
     difference()
     {
-      table_mod_top_frame();
-      table_mod_bottom_board(10);
+      table_mod_top_frame(width, depth);
+      table_mod_bottom_board(width, depth, dim_oak_board_height);
     }
   }
 
@@ -544,7 +549,7 @@ module table()
         [dim_table_width-dim_table_leg_offset-dim_table_leg_depth,-dim_table_leg_offset+dim_table_depth-dim_table_leg_depth],
     ]) {
       translate([i[0], i[1], 0])
-#      oak_leg(dim_table_leg_height);
+      oak_leg(dim_table_leg_height);
     }
   }
 
@@ -554,12 +559,26 @@ module table()
     furu_sides(dim_table_lath_length);
   }
 
+  module table_mod_top_complete(width=dim_table_width, depth=dim_table_depth)
+  {
+    table_mod_cut_top_frame(width, depth);
+    table_mod_bottom_board(width, depth);
+    table_mod_border(width, depth);
+  }
+
   // *** Construct table at correct height.
   translate([0,0,dim_table_height-dim_oak_board_height]) {
-    table_mod_cut_top_frame();
-    table_mod_bottom_board();
+    // --- Top part.
+    table_mod_top_complete();
+    // --- Bottom part.
+    translate([dim_table_bottom_reduction/2,dim_table_bottom_reduction/2,
+      -dim_table_height+dim_oak_board_height+dim_table_bottom_part_height])
+    table_mod_top_complete(
+      dim_table_bottom_part_width,
+      dim_table_bottom_part_depth
+    );
+    // --- Add legs.
     table_mod_legs();
-  //  table_mod_border();
   }
 }
 
