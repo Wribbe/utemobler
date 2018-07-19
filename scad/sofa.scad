@@ -36,7 +36,7 @@ dim_corner_back_height = back_height+1;
 offset_corner_back = back_straight_offset+2;
 
 // Table dimensions.
-dim_table_width = 150;
+dim_table_width = 165;
 dim_table_depth = 100;
 dim_table_height = 55;
 dim_table_mosaic_depth = 0.6;
@@ -54,6 +54,7 @@ dim_table_leg_height = dim_table_height-dim_oak_board_height;
 dim_table_leg_width = 4.5;
 dim_table_leg_depth = 4.5;
 dim_table_leg_offset = 2;
+dim_table_offset = dim_pillow+back_straight_offset+dim_frame_part+15;
 
 
 back_crossbar_lower = 1;
@@ -493,6 +494,7 @@ module oak_leg(height)
 
 module table()
 {
+
   module table_mod_top_frame()
   {
     // *** Two planks for depth.
@@ -533,7 +535,7 @@ module table()
   }
 
   module table_mod_legs()
-  translate([0,0,dim_oak_board_height])
+  translate([0,0,-dim_table_leg_height])
   {
     for (i=[
         [dim_table_leg_offset,dim_table_leg_offset],
@@ -542,7 +544,7 @@ module table()
         [dim_table_width-dim_table_leg_offset-dim_table_leg_depth,-dim_table_leg_offset+dim_table_depth-dim_table_leg_depth],
     ]) {
       translate([i[0], i[1], 0])
-      oak_leg(dim_table_leg_height);
+#      oak_leg(dim_table_leg_height);
     }
   }
 
@@ -552,16 +554,17 @@ module table()
     furu_sides(dim_table_lath_length);
   }
 
-  // *** Construct table.
-  table_mod_cut_top_frame();
-  table_mod_bottom_board();
-  table_mod_legs();
-//  table_mod_border();
-
+  // *** Construct table at correct height.
+  translate([0,0,dim_table_height-dim_oak_board_height]) {
+    table_mod_cut_top_frame();
+    table_mod_bottom_board();
+    table_mod_legs();
+  //  table_mod_border();
+  }
 }
 
-sections_window=2;
-//sections_window=3;
+//sections_window=2;
+sections_window=3;
 sections_other=2;
 
 translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim_frame_part]) {
@@ -571,11 +574,11 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
   }
   color(color_frame)
   corner();
-//  for (i=[0:sections_other-1]) {
-//    translate([-dim_frame_part, dim_pillow*(i+2)+dim_frame_part, 0])
-//    rotate([0,0,-90])
-//    section();
-//  }
+  for (i=[0:sections_other-1]) {
+    translate([-dim_frame_part, dim_pillow*(i+2)+dim_frame_part, 0])
+    rotate([0,0,-90])
+    section();
+  }
 }
 
 //rotate([0,0,90])
@@ -591,6 +594,9 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
 //translate([100,200,0])
 //amanda();
 
-!table();
+
+
+translate([dim_table_offset,dim_table_offset,0])
+table();
 
 //surroundings();
