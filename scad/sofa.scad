@@ -51,7 +51,7 @@ offset_corner_back = back_straight_offset+2;
 
 // Table dimensions.
 dim_table_max = 240;
-dim_table_width = 165/2;
+dim_table_width = 190/2;
 dim_table_depth = 110;
 dim_table_height = 55;
 dim_table_hole = dim_table_max - dim_table_width*2;
@@ -64,7 +64,7 @@ dim_table_cut_depth = dim_oak_board_height-dim_board_height-dim_table_mosaic_dep
 dim_table_cut_width = 1.0;
 dim_table_lath_width = 3.8;
 dim_table_lath_height = 2.5;
-dim_table_oak_border_width = 4;
+dim_table_oak_border_width = 6;
 dim_table_oak_border_height = 1.0;
 dim_table_leg_height = dim_table_height-dim_oak_board_height;
 dim_table_leg_width = 4.5;
@@ -743,16 +743,25 @@ module table2(width, depth, height, segment)
       }
     }
     // *** Add laths width-wise.
-    temp_table_lath_width = func_space_leg_to_end(width);
-    temp_table_lath_width_offset = (dim_table_width - width);
-    translate([0,func_offset_to_behind_leg(),-dim_table_lath_height])
-    {
-      translate([(depth-func_depth_table_lath(depth,
-      width))/2-dim_table_lath_width,-temp_table_lath_width_offset,0])
+    if (!segment) {
+      temp_table_lath_width = func_space_leg_to_end(width);
+      temp_table_lath_width_offset = (dim_table_width - width);
+      translate([0,func_offset_to_behind_leg(),-dim_table_lath_height])
       {
-        lath(temp_table_lath_width);
-        translate([func_depth_table_lath(depth, width)+dim_table_lath_width,0,0])
-        lath(temp_table_lath_width);
+        translate([(depth-func_depth_table_lath(depth,
+        width))/2-dim_table_lath_width,-temp_table_lath_width_offset,0])
+        {
+          lath(temp_table_lath_width);
+          translate([func_depth_table_lath(depth, width)+dim_table_lath_width,0,0])
+          lath(temp_table_lath_width);
+        }
+      }
+    } else {
+      translate([dim_table_oak_border_height,0,-dim_table_lath_height])
+      {
+        lath(width);
+        translate([depth-(dim_table_oak_border_height*2)-dim_table_lath_width,0,0])
+        lath(width);
       }
     }
   }
@@ -761,33 +770,41 @@ module table2(width, depth, height, segment)
   {
     temp_diff_width = dim_table_width-width;
     temp_lath_depth = func_depth_table_lath(depth, width);
-    translate([
-      depth-(depth-temp_lath_depth)/2+dim_table_lath_width,
-      -temp_diff_width+func_offset_to_behind_leg()],
-      0)
-    {
-      rotate([0,90,0])
-      oak_border(width-func_offset_to_behind_leg()+temp_diff_width);
 
-      translate([-dim_table_lath_width*2-dim_table_oak_border_height-temp_lath_depth,0,0])
-      rotate([0,90,0])
-      oak_border(width-func_offset_to_behind_leg()+temp_diff_width);
-    }
-    temp_border_upper_offset = [
-      func_offset_to_behind_leg(),
-      dim_table_leg_offset+dim_table_oak_border_height,
-      0
-    ];
-    temp_border_lower_offset = [
-      -((dim_table_depth-depth)/2)+func_offset_to_behind_leg(),
-      dim_table_oak_border_height,
-      0
-    ];
-    if (!segment) {
+    if (!segment)
+    {
+      translate([
+        depth-(depth-temp_lath_depth)/2+dim_table_lath_width,
+        -temp_diff_width+func_offset_to_behind_leg()],
+        0)
+      {
+        rotate([0,90,0])
+        oak_border(width-func_offset_to_behind_leg()+temp_diff_width);
+
+        translate([-dim_table_lath_width*2-dim_table_oak_border_height-temp_lath_depth,0,0])
+        rotate([0,90,0])
+        oak_border(width-func_offset_to_behind_leg()+temp_diff_width);
+      }
+      temp_border_upper_offset = [
+        func_offset_to_behind_leg(),
+        dim_table_leg_offset+dim_table_oak_border_height,
+        0
+      ];
+      temp_border_lower_offset = [
+        -((dim_table_depth-depth)/2)+func_offset_to_behind_leg(),
+        dim_table_oak_border_height,
+        0
+      ];
       temp_border_depth_side_offset = func_bool_lower_table(width) ? temp_border_lower_offset : temp_border_upper_offset;
       translate(temp_border_depth_side_offset)
       rotate([90,90,0])
       oak_border(func_space_between_legs());
+    } else {
+      translate([depth-dim_table_oak_border_height,0,0])
+      rotate([0,90,0])
+      oak_border(width);
+      rotate([0,90,0])
+      oak_border(width);
     }
   }
 
@@ -831,6 +848,27 @@ module table2(width, depth, height, segment)
 
 }
 
+module split_table(width, depth, height)
+{
+  hole_extra_space = 5;
+  table2(width, depth, height);
+  translate([width*2+dim_table_hole+hole_extra_space,0,0])
+  {
+    mirror()
+    table2(width, depth, height);
+  }
+
+  translate([width+hole_extra_space/2,0,dim_table_bottom_part_height])
+  table2(dim_table_hole, depth, height, segment=true);
+
+  dim_table2_mechanics_length = dim_table_hole+hole_extra_space*2+(width/3)*2+3;
+  table2_mechanics(dim_table2_mechanics_length, hole_extra_space);
+
+//  translate([0,10,0])
+//  color("Yellow")
+//  table2_mechanics(dim_table_width*2, hole_extra_space);
+}
+
 //sections_window=2;
 sections_window=3;
 sections_other=2;
@@ -863,9 +901,14 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
 //amanda();
 
 
-module table2_mechanics(total_width)
+module table2_mechanics(total_width, extra)
 {
-  translate([dim_table_width,0,0])
+  temp_table2_mechanics_offset = dim_table_leg_offset+dim_table_lath_width+dim_oak_board_height;
+  translate([
+    (dim_table_max+extra-total_width)/2,
+    temp_table2_mechanics_offset,
+    dim_table_height-dim_table_lath_height*2-dim_table_cut_depth
+  ])
   rotate([0,0,-90])
   lath(total_width);
 }
@@ -874,20 +917,7 @@ module table2_mechanics(total_width)
 
 translate([dim_table_offset,dim_table_offset,0])
 {
-  hole_extra_space = 5;
-  //table();
-  table2(dim_table_width, dim_table_depth, dim_table_height);
-  translate([dim_table_width*2+dim_table_hole+hole_extra_space,0,0])
-  {
-    mirror()
-    table2(dim_table_width, dim_table_depth, dim_table_height);
-  }
-
-  translate([dim_table_width+hole_extra_space/2,0,0])
-  table2(dim_table_hole, dim_table_depth, dim_table_height, segment=true);
-
-
-  table2_mechanics(dim_table_hole+2*hole_extra_space);
+  split_table(dim_table_width, dim_table_depth, dim_table_height);
 }
 
 //surroundings();
