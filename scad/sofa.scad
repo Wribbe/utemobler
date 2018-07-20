@@ -87,6 +87,8 @@ dim_table_lath_cut_depth = dim_oak_board_height-dim_table_cut_depth-dim_board_he
 dim_table_border_depth = dim_table_depth_between_legs;
 dim_table_border_width = dim_table_width_between_legs;
 
+dim_table2_bottom_width = dim_table_depth-dim_table_leg_offset*2;
+
 
 back_crossbar_lower = 1;
 
@@ -826,7 +828,7 @@ module table2(width, depth, height, segment)
     {
       table2_mod_tabletop(width, depth, height, segment);
       temp_table2_bottom_width = segment ? width : width-dim_table_leg_offset;
-      temp_table2_bottom_depth = depth-dim_table_leg_offset*2;
+      temp_table2_bottom_depth = dim_table2_bottom_width;
       translate([
         (depth-temp_table2_bottom_depth)/2,
         width-temp_table2_bottom_width,
@@ -862,30 +864,34 @@ module split_table(width, depth, height)
   table2(dim_table_hole, depth, height, segment=true);
 
   dim_table2_mechanics_length = dim_table_hole+hole_extra_space*2+(width/3)*2+3;
+
+  temp_offset_lath_z = dim_table_lath_height*2+dim_table_cut_depth;
+
+  translate([0,0,dim_table_bottom_part_height-temp_offset_lath_z])
   table2_mechanics(dim_table2_mechanics_length, hole_extra_space);
 
-//  translate([0,10,0])
-//  color("Yellow")
-//  table2_mechanics(dim_table_width*2, hole_extra_space);
+  translate([0,0,dim_table_height-temp_offset_lath_z])
+  table2_mechanics(dim_table2_mechanics_length, hole_extra_space);
+
 }
 
 //sections_window=2;
-sections_window=3;
-sections_other=2;
-
-translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim_frame_part]) {
-  for (i=[0:sections_window-1]) {
-    translate([dim_pillow*(i+1), 0, 0])
-    section();
-  }
-  color(color_frame)
-  corner();
-  for (i=[0:sections_other-1]) {
-    translate([-dim_frame_part, dim_pillow*(i+2)+dim_frame_part, 0])
-    rotate([0,0,-90])
-    section();
-  }
-}
+//sections_window=3;
+//sections_other=2;
+//
+//translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim_frame_part]) {
+//  for (i=[0:sections_window-1]) {
+//    translate([dim_pillow*(i+1), 0, 0])
+//    section();
+//  }
+//  color(color_frame)
+//  corner();
+//  for (i=[0:sections_other-1]) {
+//    translate([-dim_frame_part, dim_pillow*(i+2)+dim_frame_part, 0])
+//    rotate([0,0,-90])
+//    section();
+//  }
+//}
 
 //rotate([0,0,90])
 //translate([0, -((sections_window+1)*dim_pillow+back_straight_offset+dim_frame_part*2),0])
@@ -903,14 +909,24 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
 
 module table2_mechanics(total_width, extra)
 {
-  temp_table2_mechanics_offset = dim_table_leg_offset+dim_table_lath_width+dim_oak_board_height;
-  translate([
-    (dim_table_max+extra-total_width)/2,
-    temp_table2_mechanics_offset,
-    dim_table_height-dim_table_lath_height*2-dim_table_cut_depth
-  ])
-  rotate([0,0,-90])
-  lath(total_width);
+  //temp_table2_mechanics_offset = dim_table_leg_offset+dim_table_lath_width+dim_oak_board_height;
+  temp_offset_mechanic_from_sides = 10;
+  temp_table2_mechanics_offset = func_offset_table_lath(dim_table_width)+dim_table_lath_width;
+
+  temp_mechanic_start = temp_table2_mechanics_offset+temp_offset_mechanic_from_sides;
+  temp_mechanic_end = -temp_table2_mechanics_offset + dim_table_depth - temp_offset_mechanic_from_sides;
+  temp_mechanic_diff = temp_mechanic_end - temp_mechanic_start;
+
+
+  for (y=[temp_mechanic_start:temp_mechanic_diff/5:temp_mechanic_end]) {
+    translate([
+      (dim_table_max+extra-total_width)/2,
+      y,
+      0
+    ])
+    rotate([0,0,-90])
+    lath(total_width);
+  }
 }
 
 
