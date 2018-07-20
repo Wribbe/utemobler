@@ -801,9 +801,8 @@ module table2(width, depth, height)
   translate([0,0,dim_table_height-dim_oak_board_height])
   {
     table2_mod_tabletop(width, depth, height);
-    temp_table2_lower_part_factor = 0.90;
-    temp_table2_bottom_width = width*temp_table2_lower_part_factor+3;
-    temp_table2_bottom_depth = depth*temp_table2_lower_part_factor;
+    temp_table2_bottom_width = width-dim_table_leg_offset;
+    temp_table2_bottom_depth = depth-dim_table_leg_offset*2;
     translate([
       (depth-temp_table2_bottom_depth)/2,
       width-temp_table2_bottom_width,
