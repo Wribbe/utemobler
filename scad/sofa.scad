@@ -681,9 +681,16 @@ function func_space_leg_to_end(width) = width-dim_table_leg_offset-dim_table_leg
 function func_offset_to_behind_leg() = dim_table_leg_offset+dim_table_leg_width;
 function func_bool_lower_table(width) = width != dim_table_width;
 
+function func_depth_table_lath(depth, width) = func_bool_lower_table(width) ?
+  depth-2*dim_table_lath_width-2*dim_table_oak_border_height :
+  depth-2*dim_table_leg_offset-2*dim_table_lath_width-2*dim_table_oak_border_height;
+
+function func_offset_table_lath(width) = func_bool_lower_table(width) ?
+  dim_table_oak_border_height :
+  dim_table_leg_offset+dim_table_oak_border_height;
+
 module table2(width, depth, height)
 {
-
 
   module table2_mod_oak_frame(width, depth, height)
   {
@@ -714,8 +721,7 @@ module table2(width, depth, height)
   module table2_mod_lath_work(width, depth, height)
   {
     temp_table_space_between_legs = func_space_between_legs();
-    temp_table_lath_depth = depth-2*dim_table_leg_offset-2*dim_table_lath_width-2*dim_table_oak_border_height;
-    temp_table_lath_offset = dim_table_leg_offset+dim_table_oak_border_height;
+    temp_table_lath_offset = func_offset_table_lath(width);
     temp_table_lath_span = width-temp_table_lath_offset-dim_table_lath_width;
     temp_table_lath_z_adjust = dim_oak_board_height-dim_table_cut_depth;
     temp_table_lath_translate = [
@@ -729,7 +735,7 @@ module table2(width, depth, height)
     {
       for (i=[0:temp_table_lath_span/3:temp_table_lath_span]) {
         temp_z = i != 0 ? temp_table_lath_z_adjust : 0;
-        temp_depth = i != 0 ? temp_table_lath_depth : temp_table_space_between_legs;
+        temp_depth = i != 0 ? func_depth_table_lath(depth, width) : temp_table_space_between_legs;
         translate([-i,(depth-temp_depth)/2,temp_z])
         lath(temp_depth);
       }
@@ -738,10 +744,10 @@ module table2(width, depth, height)
     temp_table_lath_width = func_space_leg_to_end(width);
     translate([0,func_offset_to_behind_leg(),-dim_table_lath_height])
     {
-      translate([dim_table_leg_offset+dim_table_oak_border_height,0,0])
+      translate([(depth-func_depth_table_lath(depth, width))/2-dim_table_lath_width,0,0])
       {
         lath(temp_table_lath_width);
-        translate([temp_table_lath_depth+dim_table_lath_width,0,0])
+        translate([func_depth_table_lath(depth, width)+dim_table_lath_width,0,0])
         lath(temp_table_lath_width);
       }
     }
@@ -749,14 +755,19 @@ module table2(width, depth, height)
 
   module table2_mod_oak_border(width, depth, height)
   {
-    translate([dim_table_leg_offset,func_offset_to_behind_leg(),0])
+    temp_diff_width = dim_table_width-width;
+    temp_lath_depth = func_depth_table_lath(depth, width);
+    translate([
+      depth-(depth-temp_lath_depth)/2+dim_table_lath_width,
+      -temp_diff_width+func_offset_to_behind_leg()],
+      0)
     {
       rotate([0,90,0])
-      oak_border(width-func_offset_to_behind_leg());
+      oak_border(width-func_offset_to_behind_leg()+temp_diff_width);
 
-      translate([depth-2*dim_table_leg_offset-dim_table_oak_border_height,0,0])
+      translate([-dim_table_lath_width*2-dim_table_oak_border_height-temp_lath_depth,0,0])
       rotate([0,90,0])
-      oak_border(width-func_offset_to_behind_leg());
+      oak_border(width-func_offset_to_behind_leg()+temp_diff_width);
     }
     temp_border_upper_offset = [
       func_offset_to_behind_leg(),
@@ -794,7 +805,7 @@ module table2(width, depth, height)
     translate([
       (depth-temp_table2_bottom_depth)/2,
       width-temp_table2_bottom_width,
-      -10
+      -30
     ])
     table2_mod_tabletop(temp_table2_bottom_width, temp_table2_bottom_depth,
     height);
