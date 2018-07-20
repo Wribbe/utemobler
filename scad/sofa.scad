@@ -50,8 +50,8 @@ dim_corner_back_height = back_height+1;
 offset_corner_back = back_straight_offset+2;
 
 // Table dimensions.
-dim_table_width = 240;
-//dim_table_width = 165;
+//dim_table_width = 240;
+dim_table_width = 165/2;
 dim_table_depth = 110;
 dim_table_height = 55;
 dim_table_mosaic_depth = 0.6;
@@ -60,6 +60,7 @@ dim_oak_board_height = 1.5;
 dim_table_top_indent = 1.5;
 dim_board_height = 0.3;
 dim_table_cut_depth = dim_oak_board_height-dim_board_height-dim_table_mosaic_depth;
+dim_table_cut_width = 1.0;
 dim_table_lath_width = 3.8;
 dim_table_lath_height = 2.5;
 dim_table_oak_border_width = 3;
@@ -675,6 +676,96 @@ module table()
   }
 }
 
+function func_space_between_legs() = dim_table_depth-2*dim_table_leg_offset-2*dim_table_leg_depth;
+function func_space_leg_to_end(width) = width-dim_table_leg_offset-dim_table_leg_width;
+
+module table2(width, depth, height)
+{
+
+
+  module table2_mod_oak_frame(width, depth, height)
+  {
+    oak(width);
+    translate([depth-dim_oak_board_width,0,0]) oak(width);
+    translate([0,dim_oak_board_width,0]) rotate([0,0,-90]) oak(depth);
+  }
+
+  module table2_mod_inner_board(width, depth, board_height)
+  {
+    temp_table_inner_depth = depth - 2*dim_oak_board_width;
+    temp_table_inner_width = width - dim_oak_board_width;
+    temp_table_board_depth = temp_table_inner_depth+dim_table_cut_depth*2;
+    temp_table_board_width = temp_table_inner_width+dim_table_cut_depth*2;
+    temp_table_board_offset = [
+      (depth-temp_table_board_depth)/2,
+      (width-temp_table_board_width+dim_oak_board_width)/2
+    ];
+    translate([
+      temp_table_board_offset[0],
+      temp_table_board_offset[1],
+      dim_oak_board_height-dim_table_cut_depth
+    ])
+    board(temp_table_board_depth, temp_table_inner_width+dim_table_cut_depth,
+    board_height);
+  }
+
+  module table2_mod_lath_work(width, depth, height)
+  {
+    temp_table_space_between_legs = func_space_between_legs();
+    temp_table_lath_depth = depth-2*dim_table_leg_offset-2*dim_table_lath_width-2*dim_table_oak_border_height;
+    temp_table_lath_offset = dim_table_leg_offset+dim_table_oak_border_height;
+    temp_table_lath_span = width-temp_table_lath_offset-dim_table_lath_width;
+    temp_table_lath_z_adjust = dim_oak_board_height-dim_table_cut_depth;
+    temp_table_lath_translate = [
+        0,
+        dim_table_lath_width+temp_table_lath_offset,
+        -dim_table_lath_height
+    ];
+    // *** Add laths depth-wise.
+    translate(temp_table_lath_translate)
+    rotate([0,0,-90])
+    {
+      for (i=[0:temp_table_lath_span/3:temp_table_lath_span]) {
+        temp_z = i != 0 ? temp_table_lath_z_adjust : 0;
+        temp_depth = i != 0 ? temp_table_lath_depth : temp_table_space_between_legs;
+        translate([-i,(depth-temp_depth)/2,temp_z])
+        lath(temp_depth);
+      }
+    }
+    // *** Add laths width-wise.
+    temp_table_lath_width = func_space_leg_to_end(width);
+    translate([0,dim_table_leg_offset+dim_table_leg_width,-dim_table_lath_height])
+    {
+      translate([dim_table_leg_offset+dim_table_oak_border_height,0,0])
+      {
+        lath(temp_table_lath_width);
+        translate([temp_table_lath_depth+dim_table_lath_width,0,0])
+        lath(temp_table_lath_width);
+      }
+    }
+  }
+
+
+  translate([0,0,dim_table_height-dim_oak_board_height])
+  {
+    difference() {
+      table2_mod_oak_frame(width, depth, height);
+      table2_mod_inner_board(width, depth, dim_oak_board_height);
+    }
+    table2_mod_inner_board(width, depth, dim_board_height);
+    table2_mod_lath_work(width, depth, height);
+  }
+
+  translate([dim_table_leg_offset, dim_table_leg_offset])
+  {
+    oak_leg(height-dim_oak_board_height);
+    translate([func_space_between_legs()+dim_table_leg_width,0,0])
+    oak_leg(height-dim_oak_board_height);
+  }
+
+
+}
+
 //sections_window=2;
 sections_window=3;
 sections_other=2;
@@ -709,6 +800,9 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
 
 
 translate([dim_table_offset,dim_table_offset,0])
-table();
+{
+  //table();
+  table2(dim_table_width, dim_table_depth, dim_table_height);
+}
 
 //surroundings();

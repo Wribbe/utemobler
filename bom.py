@@ -239,8 +239,8 @@ def main():
     print("Need {} x of {}cm.".format(num_max, max_len))
 
     materials_picked_table = pick(recipe_table, True)
-    # Add 1 extra board.
-    materials_picked_table['Board'] += 1
+#    # Add 1 extra board.
+#    materials_picked_table['Board'] += 1
 
     #saw_materials(lengths_table, recipe_table, True)
     num_sawed = saw_materials(lengths_table, recipe_table)
