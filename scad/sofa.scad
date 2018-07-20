@@ -733,37 +733,44 @@ module table2(width, depth, height, segment)
         dim_table_lath_width+temp_table_lath_offset,
         -dim_table_lath_height
     ];
-    // *** Add laths depth-wise.
-    translate(temp_table_lath_translate)
-    rotate([0,0,-90])
-    {
-      for (i=[0:temp_table_lath_span/3:temp_table_lath_span]) {
-        temp_z = (i != 0 || segment) ? temp_table_lath_z_adjust : 0;
-        temp_depth = i != 0 || segment ? func_depth_table_lath(depth, width) : temp_table_space_between_legs;
-        translate([-i,(depth-temp_depth)/2,temp_z])
-        lath(temp_depth);
-      }
-    }
-    // *** Add laths width-wise.
-    if (!segment) {
-      temp_table_lath_width = func_space_leg_to_end(width);
-      temp_table_lath_width_offset = (dim_table_width - width);
-      translate([0,func_offset_to_behind_leg(),-dim_table_lath_height])
+    for (z=[0, dim_table_oak_border_width-dim_table_lath_height]) {
+      // *** Add laths depth-wise.
+      translate(temp_table_lath_translate)
+      rotate([0,0,-90])
       {
-        translate([(depth-func_depth_table_lath(depth,
-        width))/2-dim_table_lath_width,-temp_table_lath_width_offset,0])
-        {
-          lath(temp_table_lath_width);
-          translate([func_depth_table_lath(depth, width)+dim_table_lath_width,0,0])
-          lath(temp_table_lath_width);
+        if (segment && z > 0) {
+        } else {
+          for (i=[0:temp_table_lath_span/3:temp_table_lath_span]) {
+            temp_z = (i != 0 || segment) ? temp_table_lath_z_adjust : 0;
+            temp_depth = i != 0 || segment ? func_depth_table_lath(depth, width) : temp_table_space_between_legs;
+            translate([-i,(depth-temp_depth)/2,temp_z-z])
+            lath(temp_depth);
+          }
         }
       }
-    } else {
-      translate([dim_table_oak_border_height,0,-dim_table_lath_height])
-      {
-        lath(width);
-        translate([depth-(dim_table_oak_border_height*2)-dim_table_lath_width,0,0])
-        lath(width);
+      // *** Add laths width-wise.
+      if (!segment) {
+        temp_table_lath_width = func_space_leg_to_end(width);
+        temp_table_lath_width_offset = (dim_table_width - width);
+        translate([0,func_offset_to_behind_leg(),-dim_table_lath_height])
+        {
+          translate([(depth-func_depth_table_lath(depth,
+          width))/2-dim_table_lath_width,-temp_table_lath_width_offset,-z])
+          {
+            lath(temp_table_lath_width);
+            translate([func_depth_table_lath(depth, width)+dim_table_lath_width,0,0])
+            lath(temp_table_lath_width);
+          }
+        }
+      } else {
+        if (z == 0) {
+          translate([dim_table_oak_border_height,0,-dim_table_lath_height-z])
+          {
+            lath(width);
+            translate([depth-(dim_table_oak_border_height*2)-dim_table_lath_width,0,])
+            lath(width);
+          }
+        }
       }
     }
   }
@@ -909,20 +916,20 @@ module split_table(width, depth, height)
 
 module table2_mechanics(total_width, extra)
 {
-  //temp_table2_mechanics_offset = dim_table_leg_offset+dim_table_lath_width+dim_oak_board_height;
   temp_offset_mechanic_from_sides = 10;
   temp_table2_mechanics_offset = func_offset_table_lath(dim_table_width)+dim_table_lath_width;
 
   temp_mechanic_start = temp_table2_mechanics_offset+temp_offset_mechanic_from_sides;
   temp_mechanic_end = -temp_table2_mechanics_offset + dim_table_depth - temp_offset_mechanic_from_sides;
   temp_mechanic_diff = temp_mechanic_end - temp_mechanic_start;
+  temp_mechanic_additional_z = 0.5;
 
 
   for (y=[temp_mechanic_start:temp_mechanic_diff/5:temp_mechanic_end]) {
     translate([
       (dim_table_max+extra-total_width)/2,
       y,
-      0
+      temp_mechanic_additional_z
     ])
     rotate([0,0,-90])
     lath(total_width);
