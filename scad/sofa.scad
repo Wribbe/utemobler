@@ -51,7 +51,7 @@ offset_corner_back = back_straight_offset+2;
 
 // Table dimensions.
 dim_table_max = 240;
-dim_table_width = 190/2;
+dim_table_width = 165/2;
 dim_table_depth = 110;
 dim_table_height = 55;
 dim_table_hole = dim_table_max - dim_table_width*2;
