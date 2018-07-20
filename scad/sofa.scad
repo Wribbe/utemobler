@@ -677,7 +677,7 @@ module table()
 }
 
 function func_space_between_legs() = dim_table_depth-2*dim_table_leg_offset-2*dim_table_leg_depth;
-function func_space_leg_to_end(width) = width-dim_table_leg_offset-dim_table_leg_width;
+function func_space_leg_to_end(width) = dim_table_width-dim_table_leg_offset-dim_table_leg_width;
 function func_offset_to_behind_leg() = dim_table_leg_offset+dim_table_leg_width;
 function func_bool_lower_table(width) = width != dim_table_width;
 
@@ -742,9 +742,11 @@ module table2(width, depth, height)
     }
     // *** Add laths width-wise.
     temp_table_lath_width = func_space_leg_to_end(width);
+    temp_table_lath_width_offset = (dim_table_width - width);
     translate([0,func_offset_to_behind_leg(),-dim_table_lath_height])
     {
-      translate([(depth-func_depth_table_lath(depth, width))/2-dim_table_lath_width,0,0])
+      translate([(depth-func_depth_table_lath(depth,
+      width))/2-dim_table_lath_width,-temp_table_lath_width_offset,0])
       {
         lath(temp_table_lath_width);
         translate([func_depth_table_lath(depth, width)+dim_table_lath_width,0,0])
