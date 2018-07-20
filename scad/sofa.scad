@@ -808,18 +808,14 @@ module table2(width, depth, height, segment)
     translate([0,0,dim_table_height-dim_oak_board_height])
     {
       table2_mod_tabletop(width, depth, height, segment);
-      temp_table2_bottom_width = width-dim_table_leg_offset;
+      temp_table2_bottom_width = segment ? width : width-dim_table_leg_offset;
       temp_table2_bottom_depth = depth-dim_table_leg_offset*2;
       translate([
         (depth-temp_table2_bottom_depth)/2,
         width-temp_table2_bottom_width,
         -dim_table_height+dim_table_bottom_part_height
       ])
-      if (!segment) {
-        table2_mod_tabletop(temp_table2_bottom_width, temp_table2_bottom_depth, height, segment);
-      } else {
-        table2_mod_tabletop(width, depth, height, segment);
-      }
+      table2_mod_tabletop(temp_table2_bottom_width, temp_table2_bottom_depth, height, segment);
     }
 
     if (!segment) {
@@ -867,17 +863,31 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
 //amanda();
 
 
+module table2_mechanics(total_width)
+{
+  translate([dim_table_width,0,0])
+  rotate([0,0,-90])
+  lath(total_width);
+}
+
+
 
 translate([dim_table_offset,dim_table_offset,0])
 {
+  hole_extra_space = 5;
   //table();
   table2(dim_table_width, dim_table_depth, dim_table_height);
-  translate([dim_table_width*2+dim_table_hole+5,0,0])
-  mirror()
-  table2(dim_table_width, dim_table_depth, dim_table_height);
+  translate([dim_table_width*2+dim_table_hole+hole_extra_space,0,0])
+  {
+    mirror()
+    table2(dim_table_width, dim_table_depth, dim_table_height);
+  }
 
-  translate([dim_table_width+5/2,0,+dim_table_bottom_part_height])
+  translate([dim_table_width+hole_extra_space/2,0,0])
   table2(dim_table_hole, dim_table_depth, dim_table_height, segment=true);
+
+
+  table2_mechanics(dim_table_hole+2*hole_extra_space);
 }
 
 //surroundings();
