@@ -3,4 +3,5 @@ https://www.bauhaus.se/oljehardad-board-3-0mm.html
 https://www.bauhaus.se/limtrastolpe-ek-2400x45x45mm.html
 https://www.bauhaus.se/lakt-25x38-g4-3-4-2m.html
 https://www.bauhaus.se/planhyvlat-ek-15x95x2400mm.html
-https://www.bauhaus.se/planhyvlat-ek-10x30x2440mm.html
+#https://www.bauhaus.se/planhyvlat-ek-10x30x2440mm.html
+https://www.bauhaus.se/planhyvlat-ek-10x20x2440mm-1.html
