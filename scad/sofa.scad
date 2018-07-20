@@ -50,10 +50,11 @@ dim_corner_back_height = back_height+1;
 offset_corner_back = back_straight_offset+2;
 
 // Table dimensions.
-//dim_table_width = 240;
+dim_table_max = 240;
 dim_table_width = 165/2;
 dim_table_depth = 110;
 dim_table_height = 55;
+dim_table_hole = dim_table_max - dim_table_width*2;
 dim_table_mosaic_depth = 0.6;
 dim_oak_board_width = 9.5;
 dim_oak_board_height = 1.5;
@@ -798,25 +799,29 @@ module table2(width, depth, height)
     table2_mod_oak_border(width, depth, height);
   }
 
-  translate([0,0,dim_table_height-dim_oak_board_height])
+  rotate([0,0,-90])
+  mirror()
   {
-    table2_mod_tabletop(width, depth, height);
-    temp_table2_bottom_width = width-dim_table_leg_offset;
-    temp_table2_bottom_depth = depth-dim_table_leg_offset*2;
-    translate([
-      (depth-temp_table2_bottom_depth)/2,
-      width-temp_table2_bottom_width,
-      -30
-    ])
-    table2_mod_tabletop(temp_table2_bottom_width, temp_table2_bottom_depth,
-    height);
-  }
+    translate([0,0,dim_table_height-dim_oak_board_height])
+    {
+      table2_mod_tabletop(width, depth, height);
+      temp_table2_bottom_width = width-dim_table_leg_offset;
+      temp_table2_bottom_depth = depth-dim_table_leg_offset*2;
+      translate([
+        (depth-temp_table2_bottom_depth)/2,
+        width-temp_table2_bottom_width,
+        -dim_table_height+dim_table_bottom_part_height
+      ])
+      table2_mod_tabletop(temp_table2_bottom_width, temp_table2_bottom_depth,
+      height);
+    }
 
-  translate([dim_table_leg_offset, dim_table_leg_offset])
-  {
-    oak_leg(height-dim_oak_board_height);
-    translate([func_space_between_legs()+dim_table_leg_width,0,0])
-    oak_leg(height-dim_oak_board_height);
+    translate([dim_table_leg_offset, dim_table_leg_offset])
+    {
+      oak_leg(height-dim_oak_board_height);
+      translate([func_space_between_legs()+dim_table_leg_width,0,0])
+      oak_leg(height-dim_oak_board_height);
+    }
   }
 
 
@@ -858,6 +863,9 @@ translate([back_straight_offset+dim_frame_part,back_straight_offset,dim_legs+dim
 translate([dim_table_offset,dim_table_offset,0])
 {
   //table();
+  table2(dim_table_width, dim_table_depth, dim_table_height);
+  translate([dim_table_width*2+dim_table_hole,0,0])
+  mirror()
   table2(dim_table_width, dim_table_depth, dim_table_height);
 }
 
