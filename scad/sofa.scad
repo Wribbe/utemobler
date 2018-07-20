@@ -679,6 +679,7 @@ module table()
 function func_space_between_legs() = dim_table_depth-2*dim_table_leg_offset-2*dim_table_leg_depth;
 function func_space_leg_to_end(width) = width-dim_table_leg_offset-dim_table_leg_width;
 function func_offset_to_behind_leg() = dim_table_leg_offset+dim_table_leg_width;
+function func_bool_lower_table(width) = width != dim_table_width;
 
 module table2(width, depth, height)
 {
@@ -757,12 +758,23 @@ module table2(width, depth, height)
       rotate([0,90,0])
       oak_border(width-func_offset_to_behind_leg());
     }
-    translate([func_offset_to_behind_leg(),dim_table_leg_offset+dim_table_oak_border_height,0])
+    temp_border_upper_offset = [
+      func_offset_to_behind_leg(),
+      dim_table_leg_offset+dim_table_oak_border_height,
+      0
+    ];
+    temp_border_lower_offset = [
+      -((dim_table_depth-depth)/2)+func_offset_to_behind_leg(),
+      dim_table_oak_border_height,
+      0
+    ];
+    temp_border_depth_side_offset = func_bool_lower_table(width) ? temp_border_lower_offset : temp_border_upper_offset;
+    translate(temp_border_depth_side_offset)
     rotate([90,90,0])
     oak_border(func_space_between_legs());
   }
 
-  translate([0,0,dim_table_height-dim_oak_board_height])
+  module table2_mod_tabletop(width,depth, height)
   {
     difference() {
       table2_mod_oak_frame(width, depth, height);
@@ -771,6 +783,21 @@ module table2(width, depth, height)
     table2_mod_inner_board(width, depth, dim_board_height);
     table2_mod_lath_work(width, depth, height);
     table2_mod_oak_border(width, depth, height);
+  }
+
+  translate([0,0,dim_table_height-dim_oak_board_height])
+  {
+    table2_mod_tabletop(width, depth, height);
+    temp_table2_lower_part_factor = 0.90;
+    temp_table2_bottom_width = width*temp_table2_lower_part_factor+3;
+    temp_table2_bottom_depth = depth*temp_table2_lower_part_factor;
+    translate([
+      (depth-temp_table2_bottom_depth)/2,
+      width-temp_table2_bottom_width,
+      -10
+    ])
+    table2_mod_tabletop(temp_table2_bottom_width, temp_table2_bottom_depth,
+    height);
   }
 
   translate([dim_table_leg_offset, dim_table_leg_offset])
