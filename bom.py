@@ -38,8 +38,10 @@ recipe_table = [
     ('Lath',        4.2,                    16.59),
     ('Oak board',   2.4,                    319),
     ('Oak leg',     2.4,                    299),
-    ('Oak border',  2.44,                   109),
-    ('Mosaic',      0.33*0.302,             44.95),
+#    ('Oak border',  2.44,                   109), # 10mm bred.
+    ('Oak border',  2.44,                   159), # 60mm bred.
+#    ('Mosaic',      0.33*0.302,             44.95),
+    ('Mosaic',      0.33*0.302,             90.00),
 ]
 
 
@@ -152,7 +154,7 @@ def main():
             materials[name] = digits(value)
         else:
             materials[name] += digits(value)
-    materials['Mosaic'] = materials['Board'][:1]
+    materials['Mosaic'] = materials['Board'][:3]
     mosaic_count = lengths_table['Mosaic'] = Counter()
     dim_mosaic = sum([(a[0]/100)*(a[1]/100) for a in materials['Mosaic']])
     mosaic_qual = recipe_to_dict(recipe_table)['Mosaic']['quantity']
@@ -174,69 +176,69 @@ def main():
 
     grand_total = 0
 
-    # Pipe.
-    total_frame = materials['frame']
-    total_meter_frame = total_frame/100
-    cost_frame = total_meter_frame*prices['frame']
-    grand_total += cost_frame
-
-
-    print("Total frame {}cm -> {}m á {}/m --> Cost: \
-    {}kr -- {}kr".format(total_frame, total_meter_frame, prices['frame'], cost_frame,
-                 round(cost_frame, 1)))
-
-    # Cloth.
-    total_cloth = 0
-
-    for key, value in materials.items():
-        if "pillow" in key:
-            total_cloth += value
-
-    total_cloth_m2 = total_cloth/1e4
-    cloth_width = 1.6 #m
-    cloth_length_needed = total_cloth_m2/cloth_width
-    cost_cloth = cloth_length_needed*prices['tyg_kuddar']
-    grand_total += cost_cloth
-    print("Total cloth {}cm^2 -> {}m^2 á 139kr/m (160cm wide), need {}m --> {}kr \
-    --> {}kr".format(total_cloth, total_cloth_m2, cloth_length_needed, cost_cloth,
-                   round(cost_cloth, 2)))
-
-    # Stuffing main.
-    num_pillows = 8
-    cost_pillow_filling = num_pillows*prices['stoppning_kudde']
-    print("Stuffing main pillows 125kr/pillow á {} pillows: {}kr -->\
-     {}kr.".format(num_pillows, cost_pillow_filling, round(cost_pillow_filling, 2)))
-    grand_total += cost_pillow_filling
-
-    # Stuffing back.
-    num_back_pillows = 9
-    cost_pillow_back_filling = num_back_pillows*prices['stoppning_kudde_bak']
-    print("Stuffing back pillows {}kr/pillow á {} pillows: {}kr -->\
-     {}kr.".format(prices['stoppning_kudde_bak'], num_back_pillows,
-                   cost_pillow_back_filling, round(cost_pillow_back_filling, 2)))
-    grand_total += cost_pillow_back_filling
-
-    print("--------\nTotal: {}kr.".format(round(grand_total, 2)))
-
-    print("\nLength summery:")
-    for v, l in reversed(sorted([(v, l) for l, v in lengths.items()])):
-        print("{:<3}x {}".format(v, l))
-
-    max_len = 420/2
-    current_len = 0
-    num_max = 0
-
-    for l, n in lengths.items():
-        l = digits(l)
-        for _ in range(n):
-    #        print("Current total: {} Trying to add: {}". format(current_len, l))
-            current_len += l
-            if current_len > max_len:
-    #            print("not using: {}".format(max_len-(current_len-l)))
-                num_max += 1
-                current_len = l
-
-    print("Need {} x of {}cm.".format(num_max, max_len))
+#    # Pipe.
+#    total_frame = materials['frame']
+#    total_meter_frame = total_frame/100
+#    cost_frame = total_meter_frame*prices['frame']
+#    grand_total += cost_frame
+#
+#
+#    print("Total frame {}cm -> {}m á {}/m --> Cost: \
+#    {}kr -- {}kr".format(total_frame, total_meter_frame, prices['frame'], cost_frame,
+#                 round(cost_frame, 1)))
+#
+#    # Cloth.
+#    total_cloth = 0
+#
+#    for key, value in materials.items():
+#        if "pillow" in key:
+#            total_cloth += value
+#
+#    total_cloth_m2 = total_cloth/1e4
+#    cloth_width = 1.6 #m
+#    cloth_length_needed = total_cloth_m2/cloth_width
+#    cost_cloth = cloth_length_needed*prices['tyg_kuddar']
+#    grand_total += cost_cloth
+#    print("Total cloth {}cm^2 -> {}m^2 á 139kr/m (160cm wide), need {}m --> {}kr \
+#    --> {}kr".format(total_cloth, total_cloth_m2, cloth_length_needed, cost_cloth,
+#                   round(cost_cloth, 2)))
+#
+#    # Stuffing main.
+#    num_pillows = 8
+#    cost_pillow_filling = num_pillows*prices['stoppning_kudde']
+#    print("Stuffing main pillows 125kr/pillow á {} pillows: {}kr -->\
+#     {}kr.".format(num_pillows, cost_pillow_filling, round(cost_pillow_filling, 2)))
+#    grand_total += cost_pillow_filling
+#
+#    # Stuffing back.
+#    num_back_pillows = 9
+#    cost_pillow_back_filling = num_back_pillows*prices['stoppning_kudde_bak']
+#    print("Stuffing back pillows {}kr/pillow á {} pillows: {}kr -->\
+#     {}kr.".format(prices['stoppning_kudde_bak'], num_back_pillows,
+#                   cost_pillow_back_filling, round(cost_pillow_back_filling, 2)))
+#    grand_total += cost_pillow_back_filling
+#
+#    print("--------\nTotal: {}kr.".format(round(grand_total, 2)))
+#
+#    print("\nLength summery:")
+#    for v, l in reversed(sorted([(v, l) for l, v in lengths.items()])):
+#        print("{:<3}x {}".format(v, l))
+#
+#    max_len = 420/2
+#    current_len = 0
+#    num_max = 0
+#
+#    for l, n in lengths.items():
+#        l = digits(l)
+#        for _ in range(n):
+#    #        print("Current total: {} Trying to add: {}". format(current_len, l))
+#            current_len += l
+#            if current_len > max_len:
+#    #            print("not using: {}".format(max_len-(current_len-l)))
+#                num_max += 1
+#                current_len = l
+#
+#    print("Need {} x of {}cm.".format(num_max, max_len))
 
     materials_picked_table = pick(recipe_table, True)
 #    # Add 1 extra board.

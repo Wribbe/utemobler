@@ -704,7 +704,7 @@ module table2(width, depth, height, segment)
     }
   }
 
-  module table2_mod_inner_board(width, depth, board_height, segment)
+  module table2_mod_inner_board(width, depth, board_height, segment, print=true)
   {
     temp_table_inner_depth = depth - 2*dim_oak_board_width;
     temp_table_inner_width = width - (segment ? 0 : 1)*dim_oak_board_width;
@@ -719,7 +719,7 @@ module table2(width, depth, height, segment)
       temp_table_board_offset[1],
       dim_oak_board_height-dim_table_cut_depth
     ])
-    board(temp_table_board_depth, temp_table_board_width, board_height);
+    board(temp_table_board_depth, temp_table_board_width, board_height, print);
   }
 
   module table2_mod_lath_work(width, depth, height, segment)
@@ -821,7 +821,7 @@ module table2(width, depth, height, segment)
   {
     difference() {
       table2_mod_oak_frame(width, depth, height, segment);
-      table2_mod_inner_board(width, depth, dim_oak_board_height, segment);
+      table2_mod_inner_board(width, depth, dim_oak_board_height, segment, print=false);
     }
     table2_mod_inner_board(width, depth, dim_board_height, segment);
     table2_mod_lath_work(width, depth, height, segment);
